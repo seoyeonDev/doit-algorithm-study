@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스터디 커리큘럼 — Do it! 자료구조와 알고리즘 파이썬 편</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --accent: #7bffc0;
+    --accent2: #5bd4f0;
+    --accent3: #f0b45b;
+    --accent4: #f07b7b;
+    --text: #e8eaf0;
+    --muted: #7a7f8e;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(123,255,192,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123,255,192,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glow-orb {
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(123,255,192,0.06) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none; z-index: 0;
+  }
+  .glow-orb2 {
+    position: fixed;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(91,212,240,0.05) 0%, transparent 70%);
+    bottom: -50px; left: -50px;
+    pointer-events: none; z-index: 0;
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* ── Header ── */
+  .top-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid rgba(123,255,192,0.25);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .top-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 1.4s ease infinite;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(22px, 4.5vw, 34px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+  .hl1 { color: var(--accent); }
+  .hl2 { color: var(--accent2); }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  /* ── Summary cards ── */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.5s 0.25s ease both;
+  }
+  @media (max-width: 560px) { .meta-grid { grid-template-columns: 1fr 1fr; } }
+
+  .meta-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 14px;
+  }
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .meta-value {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .meta-value.c1 { color: var(--accent); font-family: var(--mono); }
+  .meta-value.c2 { color: var(--accent2); }
+  .meta-value.c3 { color: var(--accent3); }
+
+  /* ── Section title ── */
+  .section-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 44px 0;
+  }
+
+  /* ── Phase block ── */
+  .phase-block {
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s 0.3s ease both;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .phase-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+    letter-spacing: 0.08em;
+    border: 1px solid;
+  }
+  .phase-badge.p1 { color: var(--accent2); border-color: rgba(91,212,240,0.3); background: rgba(91,212,240,0.07); }
+  .phase-badge.p2 { color: var(--accent); border-color: rgba(123,255,192,0.3); background: rgba(123,255,192,0.07); }
+  .phase-badge.p3 { color: var(--accent3); border-color: rgba(240,180,91,0.3); background: rgba(240,180,91,0.07); }
+  .phase-badge.p4 { color: var(--accent4); border-color: rgba(240,123,123,0.3); background: rgba(240,123,123,0.07); }
+
+  .phase-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .phase-range {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  /* ── Session rows ── */
+  .sessions { display: flex; flex-direction: column; gap: 8px; }
+
+  .session-row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: start;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .session-row:hover {
+    border-color: var(--border2);
+    background: var(--surface2);
+  }
+
+  .session-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 2px;
+    white-space: nowrap;
+  }
+
+  .session-body {}
+  .session-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .session-chapters {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+  .session-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .session-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .tag.search { color: #5bd4f0; border-color: rgba(91,212,240,0.25); }
+  .tag.sort   { color: #7bffc0; border-color: rgba(123,255,192,0.25); }
+  .tag.struct { color: #f0b45b; border-color: rgba(240,180,91,0.25); }
+  .tag.tree   { color: #c4a0f5; border-color: rgba(196,160,245,0.25); }
+  .tag.hash   { color: #f07b7b; border-color: rgba(240,123,123,0.25); }
+  .tag.graph  { color: #f0b45b; border-color: rgba(240,180,91,0.25); }
+  .tag.review { color: var(--muted); border-color: rgba(122,127,142,0.3); }
+  .tag.basic  { color: #a0e0ff; border-color: rgba(160,224,255,0.25); }
+  .tag.recap  { color: #aaa; border-color: rgba(170,170,170,0.2); }
+
+  /* ── Tip box ── */
+  .tip-box {
+    background: var(--surface);
+    border: 1px solid rgba(123,255,192,0.15);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s 0.35s ease both;
+  }
+  .tip-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .tip-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+  .tip-text strong { color: var(--text); font-weight: 500; }
+
+  /* ── Problem table ── */
+  .prob-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s 0.4s ease both;
+  }
+  @media (max-width: 480px) { .prob-grid { grid-template-columns: 1fr; } }
+
+  .prob-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .prob-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .prob-card-title .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-green { background: var(--accent); }
+  .dot-blue  { background: var(--accent2); }
+  .prob-list { list-style: none; }
+  .prob-list li {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .prob-list li:last-child { border-bottom: none; }
+  .prob-list li span {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent3);
+  }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 48px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    animation: fadeUp 0.5s 0.5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.2; }
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="glow-orb"></div>
+<div class="glow-orb2"></div>
+
+<div class="container">
+
+  <div class="top-tag">스터디 커리큘럼</div>
+
+  <h1>
+    <span class="hl1">17주</span> 완성<br>
+    <span class="hl2">Do it!</span> 알고리즘<br>
+    스터디 플랜
+  </h1>
+
+  <p class="subtitle">
+    Do it! 자료구조와 함께 배우는 알고리즘 입문 — 파이썬 편<br>
+    2025.04.01 ~ 07.31 · 주 1회 · 1시간
+  </p>
+
+  <!-- meta -->
+  <div class="meta-grid">
+    <div class="meta-card">
+      <div class="meta-label">총 세션</div>
+      <div class="meta-value c1">17회</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">총 챕터</div>
+      <div class="meta-value c2">11장</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">난이도</div>
+      <div class="meta-value c3">입문~기초</div>
+    </div>
+    <div class="meta-card">
+      <div class="meta-label">언어</div>
+      <div class="meta-value c1">Python 🐍</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ──────────────────────────────
+       PHASE 1
+  ────────────────────────────── -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-badge p1">Phase 1</div>
+      <div class="phase-name">기초 다지기</div>
+      <div class="phase-range">4월 1주 ~ 4주</div>
+    </div>
+    <div class="sessions">
+
+      <div class="session-row">
+        <div class="session-num">W01<br>04/01</div>
+        <div class="session-body">
+          <div class="session-title">OT + 1장: 알고리즘 기초</div>
+          <div class="session-chapters">Ch.01 — 알고리즘이란? · 세 변수 교환 · 최댓값 구하기</div>
+          <div class="session-desc">스터디 방식 확인, 환경 셋업(Python, IDE). 알고리즘의 정의와 흐름도 개념 파악.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag basic">기초</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W02<br>04/08</div>
+        <div class="session-body">
+          <div class="session-title">1장: 알고리즘 기초 (심화)</div>
+          <div class="session-chapters">Ch.01 — 조건 판단 · 반복 · 다중 루프 · 소수 나열</div>
+          <div class="session-desc">다양한 루프 패턴과 소수 나열 알고리즘 단계별 개선 방식 비교.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag basic">기초</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W03<br>04/15</div>
+        <div class="session-body">
+          <div class="session-title">2장: 기본 자료구조</div>
+          <div class="session-chapters">Ch.02 — 배열 · 다차원 배열 · 정렬된 배열 · 역순 정렬</div>
+          <div class="session-desc">파이썬 리스트와 배열의 관계, 인덱싱과 슬라이싱 복습 포함.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag struct">자료구조</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W04<br>04/22</div>
+        <div class="session-body">
+          <div class="session-title">3장: 검색 알고리즘 I</div>
+          <div class="session-chapters">Ch.03 — 선형 검색 · 보초법 · 이진 검색 · bisect 모듈</div>
+          <div class="session-desc">O(n) vs O(log n) 시간복잡도 비교. 이진 검색의 전제 조건(정렬) 확인.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag search">검색</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────
+       PHASE 2
+  ────────────────────────────── -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-badge p2">Phase 2</div>
+      <div class="phase-name">핵심 자료구조</div>
+      <div class="phase-range">4월 5주 ~ 6월 1주</div>
+    </div>
+    <div class="sessions">
+
+      <div class="session-row">
+        <div class="session-num">W05<br>04/29</div>
+        <div class="session-body">
+          <div class="session-title">4장: 스택과 큐</div>
+          <div class="session-chapters">Ch.04 — 스택 구조 · push / pop · 큐 · 덱</div>
+          <div class="session-desc">LIFO / FIFO 개념을 파이썬 리스트와 collections.deque로 직접 구현.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag struct">자료구조</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W06<br>05/07</div>
+        <div class="session-body">
+          <div class="session-title">5장: 재귀 알고리즘 I</div>
+          <div class="session-chapters">Ch.05 — 재귀의 기본 · 팩토리얼 · 유클리드 호제법 · 하노이 탑</div>
+          <div class="session-desc">재귀 호출 스택 시각화, 기저 조건(base case)의 중요성.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag basic">재귀</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W07<br>05/13</div>
+        <div class="session-body">
+          <div class="session-title">5장: 재귀 알고리즘 II</div>
+          <div class="session-chapters">Ch.05 — 8퀸 문제 · 미로 탐색 · 브랜치 앤 바운드</div>
+          <div class="session-desc">백트래킹 개념 도입. 재귀를 통한 완전 탐색 구현 실습.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag search">탐색</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W08<br>05/20</div>
+        <div class="session-body">
+          <div class="session-title">📌 중간 복습</div>
+          <div class="session-chapters">1장 ~ 5장 전체 회고 · 코딩 문제 피드백</div>
+          <div class="session-desc">지금까지 가져온 백준/프로그래머스 문제 풀이 공유 및 어려웠던 개념 재정리.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag recap">복습</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W09<br>05/27</div>
+        <div class="session-body">
+          <div class="session-title">6장: 정렬 알고리즘 I</div>
+          <div class="session-chapters">Ch.06 — 버블 정렬 · 선택 정렬 · 삽입 정렬</div>
+          <div class="session-desc">O(n²) 정렬 비교. 안정성(stable) 개념과 각 알고리즘의 특징 정리.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag sort">정렬</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W10<br>06/03</div>
+        <div class="session-body">
+          <div class="session-title">6장: 정렬 알고리즘 II</div>
+          <div class="session-chapters">Ch.06 — 셸 정렬 · 퀵 정렬 · 병합 정렬 · 힙 정렬</div>
+          <div class="session-desc">O(n log n) 정렬과 파이썬 sorted() / heapq 내장 함수 활용 방법도 확인.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag sort">정렬</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────
+       PHASE 3
+  ────────────────────────────── -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-badge p3">Phase 3</div>
+      <div class="phase-name">트리 & 고급 구조</div>
+      <div class="phase-range">6월 2주 ~ 7월 2주</div>
+    </div>
+    <div class="sessions">
+
+      <div class="session-row">
+        <div class="session-num">W11<br>06/10</div>
+        <div class="session-body">
+          <div class="session-title">7장: 문자열 검색</div>
+          <div class="session-chapters">Ch.07 — 브루트 포스 · KMP · Boyer-Moore</div>
+          <div class="session-desc">문자열 패턴 매칭의 원리. 파이썬 str.find()와 re 모듈과의 관계 비교.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag search">검색</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W12<br>06/17</div>
+        <div class="session-body">
+          <div class="session-title">8장: 연결 리스트</div>
+          <div class="session-chapters">Ch.08 — 단일 연결 리스트 · 이중 연결 리스트 · 원형 리스트</div>
+          <div class="session-desc">노드 포인터 개념, 삽입/삭제의 O(1) 특성. 파이썬으로 직접 구현.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag struct">자료구조</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W13<br>06/24</div>
+        <div class="session-body">
+          <div class="session-title">9장: 트리 I</div>
+          <div class="session-chapters">Ch.09 — 트리 기본 · 이진 트리 · 이진 탐색 트리 구현</div>
+          <div class="session-desc">노드 삽입·검색·삭제 구현. BST의 평균 O(log n) vs 최악 O(n) 비교.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag tree">트리</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W14<br>07/01</div>
+        <div class="session-body">
+          <div class="session-title">9장: 트리 II</div>
+          <div class="session-chapters">Ch.09 — 전위·중위·후위 순회 · 레벨 순회 · 힙 트리</div>
+          <div class="session-desc">DFS vs BFS 순회 방식 이해. 힙과 우선순위 큐 연결 개념.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag tree">트리</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W15<br>07/08</div>
+        <div class="session-body">
+          <div class="session-title">10장: 해시</div>
+          <div class="session-chapters">Ch.10 — 해시 함수 · 체이닝 · 개방 주소법 · 파이썬 dict</div>
+          <div class="session-desc">해시 충돌 해결 전략 비교. 파이썬 딕셔너리의 내부 동작 이해.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag hash">해시</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────
+       PHASE 4
+  ────────────────────────────── -->
+  <div class="phase-block">
+    <div class="phase-header">
+      <div class="phase-badge p4">Phase 4</div>
+      <div class="phase-name">마무리 & 응용</div>
+      <div class="phase-range">7월 3주 ~ 4주</div>
+    </div>
+    <div class="sessions">
+
+      <div class="session-row">
+        <div class="session-num">W16<br>07/15</div>
+        <div class="session-body">
+          <div class="session-title">보충: 코딩 테스트 적용 실습</div>
+          <div class="session-chapters">정렬 · 탐색 · 스택/큐 · DP 기초 문제 모아 풀기</div>
+          <div class="session-desc">배운 자료구조를 실제 백준/프로그래머스 문제에 적용하는 패턴 정리.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag review">실전</span>
+        </div>
+      </div>
+
+      <div class="session-row">
+        <div class="session-num">W17<br>07/22</div>
+        <div class="session-body">
+          <div class="session-title">🎉 최종 회고 & 마무리</div>
+          <div class="session-chapters">전 챕터 Q&amp;A · 개인 발표 · 다음 스텝 논의</div>
+          <div class="session-desc">각자 가장 어려웠던 개념 발표 + 스터디 이후 공부 방향(그래프, DP 심화 등) 논의.</div>
+        </div>
+        <div class="session-tags">
+          <span class="tag recap">마무리</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── 문제 추천 ── -->
+  <div class="section-title">추천 문제 유형 — 챕터별</div>
+  <div class="prob-grid">
+    <div class="prob-card">
+      <div class="prob-card-title">
+        <span class="dot dot-green"></span>
+        백준 추천
+      </div>
+      <ul class="prob-list">
+        <li>수 정렬하기 (버블/선택) <span>1181</span></li>
+        <li>이분 탐색 <span>1920</span></li>
+        <li>스택 <span>10828</span></li>
+        <li>큐 구현 <span>10845</span></li>
+        <li>트리 순회 <span>1991</span></li>
+        <li>해시맵 활용 <span>1764</span></li>
+      </ul>
+    </div>
+    <div class="prob-card">
+      <div class="prob-card-title">
+        <span class="dot dot-blue"></span>
+        프로그래머스 추천
+      </div>
+      <ul class="prob-list">
+        <li>가장 큰 수 (정렬) <span>Lv.2</span></li>
+        <li>기능개발 (큐) <span>Lv.2</span></li>
+        <li>올바른 괄호 (스택) <span>Lv.2</span></li>
+        <li>위장 (해시) <span>Lv.2</span></li>
+        <li>전화번호 목록 (해시) <span>Lv.2</span></li>
+        <li>이진 변환 반복 (재귀) <span>Lv.2</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── Tip ── -->
+  <div class="tip-box">
+    <div class="tip-label">💡 스터디 운영 팁</div>
+    <div class="tip-text">
+      <strong>요약 공유</strong>는 분량보다 <strong>핵심 1~2가지</strong>에 집중하세요 — 길어지면 부담이 됩니다.<br>
+      코딩 문제는 <strong>전 주 챕터 연관 문제</strong> 1~2개를 순번대로 가져오되, 못 풀었어도 괜찮습니다. 어디서 막혔는지 공유하는 것 자체가 학습입니다.<br>
+      <strong>복잡한 챕터</strong>(재귀 5장, 트리 9장)는 2회로 나눠져 있으니 속도를 여유롭게 가져가세요.
+    </div>
+  </div>
+
+  <div class="footer">
+    자료구조 &amp; 알고리즘 파이썬 스터디 · 2025.04 — 07 · 17 sessions
+  </div>
+
+</div>
+</body>
+</html>
