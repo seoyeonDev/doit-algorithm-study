@@ -28,4 +28,4 @@
 - 개인 결석 최대 3회
 
 ## 링크
-- [커리큘럼](curriculum.html)
+- [커리큘럼](https://doit-algorithm-study-python.vercel.app/curriculum.html)
