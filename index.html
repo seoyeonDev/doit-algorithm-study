@@ -12,7 +12,7 @@
     --bg: #0d0f14;
     --surface: #151820;
     --surface2: #1c2030;
-    --border: rgba(255,255,255,0.08); 
+    --border: rgba(255,255,255,0.08);
     --border2: rgba(255,255,255,0.14);
     --accent: #7bffc0;
     --accent2: #5bd4f0;
@@ -58,7 +58,6 @@
     padding: 60px 24px 100px;
   }
 
-  /* ── Header ── */
   .top-tag {
     display: inline-flex; align-items: center; gap: 8px;
     font-family: var(--mono); font-size: 11px; color: var(--accent);
@@ -89,7 +88,6 @@
     animation: fadeUp 0.5s 0.2s ease both;
   }
 
-  /* ── Meta cards ── */
   .meta-grid {
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 10px; margin-bottom: 44px;
@@ -110,7 +108,6 @@
   .meta-value.c2 { color: var(--accent2); }
   .meta-value.c3 { color: var(--accent3); }
 
-  /* ── Board header ── */
   .board-header {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 12px;
@@ -132,7 +129,6 @@
     border-color: rgba(91,212,240,0.5);
   }
 
-  /* ── Board table ── */
   .board {
     display: flex; flex-direction: column; gap: 6px;
     animation: fadeUp 0.5s 0.35s ease both;
@@ -154,93 +150,47 @@
     gap: 12px; align-items: center;
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 12px; padding: 14px 18px;
-    cursor: default;
     transition: border-color 0.2s, background 0.2s;
   }
-  .board-row:hover {
-    border-color: var(--border2);
-    background: var(--surface2);
-  }
+  .board-row:hover { border-color: var(--border2); background: var(--surface2); }
   .board-row.done { opacity: 0.6; }
   .board-row.current { border-color: rgba(123,255,192,0.3); }
 
-  .row-week {
-    font-family: var(--mono); font-size: 11px; color: var(--muted);
-    white-space: nowrap;
-  }
+  .row-week { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .row-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row-chapter { font-family: var(--mono); font-size: 10px; color: var(--accent2); }
+  .row-date { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .row-status { display: flex; justify-content: flex-end; }
 
-  .row-body {}
-  .row-title {
-    font-size: 13px; font-weight: 600; color: var(--text);
-    margin-bottom: 3px; white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis;
-  }
-  .row-chapter {
-    font-family: var(--mono); font-size: 10px; color: var(--accent2);
-  }
-
-  .row-date {
-    font-family: var(--mono); font-size: 11px; color: var(--muted);
-    white-space: nowrap;
-  }
-
-  .row-status {
-    display: flex; justify-content: flex-end;
-  }
   .status-badge {
     font-family: var(--mono); font-size: 9px; font-weight: 700;
-    padding: 3px 10px; border-radius: 100px; border: 1px solid;
-    white-space: nowrap;
+    padding: 3px 10px; border-radius: 100px; border: 1px solid; white-space: nowrap;
   }
-  .status-done    { color: var(--muted); border-color: rgba(122,127,142,0.3); background: rgba(122,127,142,0.07); }
-  .status-current { color: var(--accent); border-color: rgba(123,255,192,0.4); background: rgba(123,255,192,0.1); }
-  .status-upcoming{ color: var(--accent2); border-color: rgba(91,212,240,0.25); background: rgba(91,212,240,0.06); }
+  .status-done     { color: var(--muted); border-color: rgba(122,127,142,0.3); background: rgba(122,127,142,0.07); }
+  .status-current  { color: var(--accent); border-color: rgba(123,255,192,0.4); background: rgba(123,255,192,0.1); }
+  .status-upcoming { color: var(--accent2); border-color: rgba(91,212,240,0.25); background: rgba(91,212,240,0.06); }
 
-  .divider {
-    border: none; border-top: 1px solid var(--border); margin: 44px 0;
-  }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 44px 0; }
 
-  /* ── Rules ── */
   .rules-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-    margin-bottom: 12px;
     animation: fadeUp 0.5s 0.4s ease both;
   }
   @media (max-width: 480px) { .rules-grid { grid-template-columns: 1fr; } }
 
-  .rule-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px 18px;
-  }
-  .rule-card-title {
-    font-family: var(--mono); font-size: 10px; color: var(--muted);
-    letter-spacing: 0.1em; text-transform: uppercase;
-    margin-bottom: 12px;
-  }
+  .rule-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .rule-card-title { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
   .rule-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .rule-list li {
-    font-size: 12px; color: var(--muted); line-height: 1.6;
-    display: flex; gap: 8px; align-items: flex-start;
-  }
-  .rule-list li::before {
-    content: '—'; color: var(--accent); font-family: var(--mono);
-    flex-shrink: 0; margin-top: 1px;
-  }
+  .rule-list li { font-size: 12px; color: var(--muted); line-height: 1.6; display: flex; gap: 8px; align-items: flex-start; }
+  .rule-list li::before { content: '—'; color: var(--accent); font-family: var(--mono); flex-shrink: 0; margin-top: 1px; }
 
-  /* ── Footer ── */
-  .footer {
-    margin-top: 48px; text-align: center;
-    font-family: var(--mono); font-size: 11px; color: var(--muted);
-    animation: fadeUp 0.5s 0.5s ease both;
-  }
+  .footer { margin-top: 48px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--muted); animation: fadeUp 0.5s 0.5s ease both; }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  @keyframes blink {
-    0%, 100% { opacity: 1; } 50% { opacity: 0.2; }
-  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
   @media (max-width: 560px) {
     .board-col-head { grid-template-columns: 48px 1fr 70px; }
@@ -263,30 +213,15 @@
     <span class="hl1">Do it!</span> 자료구조와 함께<br>
     배우는 <span class="hl2">알고리즘</span> 입문
   </h1>
-  <p class="subtitle">
-    파이썬 편 · 2025.04.13 ~ 07.31 · 매주 목요일 20:00
-  </p>
+  <p class="subtitle">파이썬 편 · 2025.04.13 ~ 07.31 · 매주 목요일 20:00</p>
 
   <div class="meta-grid">
-    <div class="meta-card">
-      <div class="meta-label">기간</div>
-      <div class="meta-value c1">17주</div>
-    </div>
-    <div class="meta-card">
-      <div class="meta-label">미팅</div>
-      <div class="meta-value c2">매주 목요일</div>
-    </div>
-    <div class="meta-card">
-      <div class="meta-label">시간</div>
-      <div class="meta-value c3">20:00 ~ 21:00</div>
-    </div>
-    <div class="meta-card">
-      <div class="meta-label">인원</div>
-      <div class="meta-value c1">4명</div>
-    </div>
+    <div class="meta-card"><div class="meta-label">기간</div><div class="meta-value c1">17주</div></div>
+    <div class="meta-card"><div class="meta-label">미팅</div><div class="meta-value c2">매주 목요일</div></div>
+    <div class="meta-card"><div class="meta-label">시간</div><div class="meta-value c3">20:00 ~ 21:00</div></div>
+    <div class="meta-card"><div class="meta-label">인원</div><div class="meta-value c1">4명</div></div>
   </div>
 
-  <!-- Board -->
   <div class="board-header">
     <div class="board-title">주차별 일정</div>
     <a class="curriculum-link" href="curriculum.html">커리큘럼 보기 →</a>
@@ -299,184 +234,11 @@
     <span class="col-status" style="text-align:right">상태</span>
   </div>
 
-  <div class="board">
-
-    <div class="board-row done">
-      <div class="row-week">W01</div>
-      <div class="row-body">
-        <div class="row-title">OT + 1장: 알고리즘 기초</div>
-        <div class="row-chapter">Ch.01 — 세 변수 교환 · 최댓값</div>
-      </div>
-      <div class="row-date">04/17</div>
-      <div class="row-status"><span class="status-badge status-done">완료</span></div>
-    </div>
-
-    <div class="board-row done">
-      <div class="row-week">W02</div>
-      <div class="row-body">
-        <div class="row-title">1장: 알고리즘 기초 (심화)</div>
-        <div class="row-chapter">Ch.01 — 조건 판단 · 반복 · 소수 나열</div>
-      </div>
-      <div class="row-date">04/24</div>
-      <div class="row-status"><span class="status-badge status-done">완료</span></div>
-    </div>
-
-    <div class="board-row done">
-      <div class="row-week">W03</div>
-      <div class="row-body">
-        <div class="row-title">2장: 기본 자료구조</div>
-        <div class="row-chapter">Ch.02 — 배열 · 다차원 배열 · 역순 정렬</div>
-      </div>
-      <div class="row-date">05/01</div>
-      <div class="row-status"><span class="status-badge status-done">완료</span></div>
-    </div>
-
-    <div class="board-row done">
-      <div class="row-week">W04</div>
-      <div class="row-body">
-        <div class="row-title">3장: 검색 알고리즘 I</div>
-        <div class="row-chapter">Ch.03 — 선형 검색 · 이진 검색 · bisect</div>
-      </div>
-      <div class="row-date">05/08</div>
-      <div class="row-status"><span class="status-badge status-done">완료</span></div>
-    </div>
-
-    <div class="board-row current">
-      <div class="row-week">W05</div>
-      <div class="row-body">
-        <div class="row-title">4장: 스택과 큐</div>
-        <div class="row-chapter">Ch.04 — 스택 · push/pop · 큐 · 덱</div>
-      </div>
-      <div class="row-date">05/15</div>
-      <div class="row-status"><span class="status-badge status-current">진행중</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W06</div>
-      <div class="row-body">
-        <div class="row-title">5장: 재귀 알고리즘 I</div>
-        <div class="row-chapter">Ch.05 — 팩토리얼 · 유클리드 · 하노이 탑</div>
-      </div>
-      <div class="row-date">05/22</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W07</div>
-      <div class="row-body">
-        <div class="row-title">5장: 재귀 알고리즘 II</div>
-        <div class="row-chapter">Ch.05 — 8퀸 문제 · 미로 탐색</div>
-      </div>
-      <div class="row-date">05/29</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W08</div>
-      <div class="row-body">
-        <div class="row-title">중간 복습</div>
-        <div class="row-chapter">Ch.01~05 — 전체 회고 · 문제 피드백</div>
-      </div>
-      <div class="row-date">06/05</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W09</div>
-      <div class="row-body">
-        <div class="row-title">6장: 정렬 알고리즘 I</div>
-        <div class="row-chapter">Ch.06 — 버블 · 선택 · 삽입 정렬</div>
-      </div>
-      <div class="row-date">06/12</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W10</div>
-      <div class="row-body">
-        <div class="row-title">6장: 정렬 알고리즘 II</div>
-        <div class="row-chapter">Ch.06 — 셸 · 퀵 · 병합 · 힙 정렬</div>
-      </div>
-      <div class="row-date">06/19</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W11</div>
-      <div class="row-body">
-        <div class="row-title">7장: 문자열 검색</div>
-        <div class="row-chapter">Ch.07 — 브루트 포스 · KMP · Boyer-Moore</div>
-      </div>
-      <div class="row-date">06/26</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W12</div>
-      <div class="row-body">
-        <div class="row-title">8장: 연결 리스트</div>
-        <div class="row-chapter">Ch.08 — 단일 · 이중 · 원형 리스트</div>
-      </div>
-      <div class="row-date">07/03</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W13</div>
-      <div class="row-body">
-        <div class="row-title">9장: 트리 I</div>
-        <div class="row-chapter">Ch.09 — 이진 트리 · 이진 탐색 트리</div>
-      </div>
-      <div class="row-date">07/10</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W14</div>
-      <div class="row-body">
-        <div class="row-title">9장: 트리 II</div>
-        <div class="row-chapter">Ch.09 — 전위/중위/후위 순회 · 힙 트리</div>
-      </div>
-      <div class="row-date">07/17</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W15</div>
-      <div class="row-body">
-        <div class="row-title">10장: 해시</div>
-        <div class="row-chapter">Ch.10 — 해시 함수 · 충돌 해결 · dict</div>
-      </div>
-      <div class="row-date">07/24</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W16</div>
-      <div class="row-body">
-        <div class="row-title">보충: 코딩 테스트 실습</div>
-        <div class="row-chapter">정렬 · 탐색 · 스택/큐 · DP 기초 문제</div>
-      </div>
-      <div class="row-date">07/31</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-    <div class="board-row">
-      <div class="row-week">W17</div>
-      <div class="row-body">
-        <div class="row-title">최종 회고 &amp; 마무리</div>
-        <div class="row-chapter">전 챕터 Q&amp;A · 개인 발표 · 다음 스텝</div>
-      </div>
-      <div class="row-date">08/07</div>
-      <div class="row-status"><span class="status-badge status-upcoming">예정</span></div>
-    </div>
-
-  </div>
+  <div class="board" id="board"></div>
 
   <hr class="divider">
 
-  <!-- Rules -->
-  <div class="board-title" style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;animation:fadeUp .5s .4s ease both;">규칙</div>
+  <div class="board-title" style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;">규칙</div>
   <div class="rules-grid">
     <div class="rule-card">
       <div class="rule-card-title">참여 규칙</div>
@@ -495,10 +257,31 @@
     </div>
   </div>
 
-  <div class="footer">
-    자료구조 &amp; 알고리즘 파이썬 스터디 · 2025.04 — 07 · 17 sessions
-  </div>
+  <div class="footer">자료구조 &amp; 알고리즘 파이썬 스터디 · 2025.04 — 07 · 17 sessions</div>
 
 </div>
+
+<script>
+  const STATUS_LABEL = { done: '완료', current: '진행중', upcoming: '예정' };
+
+  fetch('weeks.json')
+    .then(r => r.json())
+    .then(({ weeks }) => {
+      const board = document.getElementById('board');
+      board.innerHTML = weeks.map(w => `
+        <div class="board-row ${w.status}">
+          <div class="row-week">${w.num}</div>
+          <div class="row-body">
+            <div class="row-title">${w.title}</div>
+            <div class="row-chapter">${w.chapter}</div>
+          </div>
+          <div class="row-date">${w.date}</div>
+          <div class="row-status">
+            <span class="status-badge status-${w.status}">${STATUS_LABEL[w.status]}</span>
+          </div>
+        </div>
+      `).join('');
+    });
+</script>
 </body>
 </html>

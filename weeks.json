@@ -1,0 +1,129 @@
+{
+  "phases": [
+    { "id": 1, "badge": "p1", "name": "기초 다지기",      "range": "4월 1주 ~ 4주" },
+    { "id": 2, "badge": "p2", "name": "핵심 자료구조",    "range": "4월 5주 ~ 6월 1주" },
+    { "id": 3, "badge": "p3", "name": "트리 & 고급 구조", "range": "6월 2주 ~ 7월 2주" },
+    { "id": 4, "badge": "p4", "name": "마무리 & 응용",    "range": "7월 3주 ~ 4주" }
+  ],
+  "weeks": [
+    {
+      "num": "W01", "date": "04/17", "phase": 1, "status": "done",
+      "title": "OT + 1장: 알고리즘 기초",
+      "chapter": "Ch.01 — 알고리즘이란? · 세 변수 교환 · 최댓값 구하기",
+      "desc": "스터디 방식 확인, 환경 셋업(Python, IDE). 알고리즘의 정의와 흐름도 개념 파악.",
+      "tags": ["basic"]
+    },
+    {
+      "num": "W02", "date": "04/24", "phase": 1, "status": "done",
+      "title": "1장: 알고리즘 기초 (심화)",
+      "chapter": "Ch.01 — 조건 판단 · 반복 · 다중 루프 · 소수 나열",
+      "desc": "다양한 루프 패턴과 소수 나열 알고리즘 단계별 개선 방식 비교.",
+      "tags": ["basic"]
+    },
+    {
+      "num": "W03", "date": "05/01", "phase": 1, "status": "done",
+      "title": "2장: 기본 자료구조",
+      "chapter": "Ch.02 — 배열 · 다차원 배열 · 정렬된 배열 · 역순 정렬",
+      "desc": "파이썬 리스트와 배열의 관계, 인덱싱과 슬라이싱 복습 포함.",
+      "tags": ["struct"]
+    },
+    {
+      "num": "W04", "date": "05/08", "phase": 1, "status": "done",
+      "title": "3장: 검색 알고리즘 I",
+      "chapter": "Ch.03 — 선형 검색 · 보초법 · 이진 검색 · bisect 모듈",
+      "desc": "O(n) vs O(log n) 시간복잡도 비교. 이진 검색의 전제 조건(정렬) 확인.",
+      "tags": ["search"]
+    },
+    {
+      "num": "W05", "date": "05/15", "phase": 2, "status": "current",
+      "title": "4장: 스택과 큐",
+      "chapter": "Ch.04 — 스택 구조 · push / pop · 큐 · 덱",
+      "desc": "LIFO / FIFO 개념을 파이썬 리스트와 collections.deque로 직접 구현.",
+      "tags": ["struct"]
+    },
+    {
+      "num": "W06", "date": "05/22", "phase": 2, "status": "upcoming",
+      "title": "5장: 재귀 알고리즘 I",
+      "chapter": "Ch.05 — 재귀의 기본 · 팩토리얼 · 유클리드 호제법 · 하노이 탑",
+      "desc": "재귀 호출 스택 시각화, 기저 조건(base case)의 중요성.",
+      "tags": ["basic"]
+    },
+    {
+      "num": "W07", "date": "05/29", "phase": 2, "status": "upcoming",
+      "title": "5장: 재귀 알고리즘 II",
+      "chapter": "Ch.05 — 8퀸 문제 · 미로 탐색 · 브랜치 앤 바운드",
+      "desc": "백트래킹 개념 도입. 재귀를 통한 완전 탐색 구현 실습.",
+      "tags": ["search"]
+    },
+    {
+      "num": "W08", "date": "06/05", "phase": 2, "status": "upcoming",
+      "title": "📌 중간 복습",
+      "chapter": "1장 ~ 5장 전체 회고 · 코딩 문제 피드백",
+      "desc": "지금까지 가져온 백준/프로그래머스 문제 풀이 공유 및 어려웠던 개념 재정리.",
+      "tags": ["recap"]
+    },
+    {
+      "num": "W09", "date": "06/12", "phase": 2, "status": "upcoming",
+      "title": "6장: 정렬 알고리즘 I",
+      "chapter": "Ch.06 — 버블 정렬 · 선택 정렬 · 삽입 정렬",
+      "desc": "O(n²) 정렬 비교. 안정성(stable) 개념과 각 알고리즘의 특징 정리.",
+      "tags": ["sort"]
+    },
+    {
+      "num": "W10", "date": "06/19", "phase": 2, "status": "upcoming",
+      "title": "6장: 정렬 알고리즘 II",
+      "chapter": "Ch.06 — 셸 정렬 · 퀵 정렬 · 병합 정렬 · 힙 정렬",
+      "desc": "O(n log n) 정렬과 파이썬 sorted() / heapq 내장 함수 활용 방법도 확인.",
+      "tags": ["sort"]
+    },
+    {
+      "num": "W11", "date": "06/26", "phase": 3, "status": "upcoming",
+      "title": "7장: 문자열 검색",
+      "chapter": "Ch.07 — 브루트 포스 · KMP · Boyer-Moore",
+      "desc": "문자열 패턴 매칭의 원리. 파이썬 str.find()와 re 모듈과의 관계 비교.",
+      "tags": ["search"]
+    },
+    {
+      "num": "W12", "date": "07/03", "phase": 3, "status": "upcoming",
+      "title": "8장: 연결 리스트",
+      "chapter": "Ch.08 — 단일 연결 리스트 · 이중 연결 리스트 · 원형 리스트",
+      "desc": "노드 포인터 개념, 삽입/삭제의 O(1) 특성. 파이썬으로 직접 구현.",
+      "tags": ["struct"]
+    },
+    {
+      "num": "W13", "date": "07/10", "phase": 3, "status": "upcoming",
+      "title": "9장: 트리 I",
+      "chapter": "Ch.09 — 트리 기본 · 이진 트리 · 이진 탐색 트리 구현",
+      "desc": "노드 삽입·검색·삭제 구현. BST의 평균 O(log n) vs 최악 O(n) 비교.",
+      "tags": ["tree"]
+    },
+    {
+      "num": "W14", "date": "07/17", "phase": 3, "status": "upcoming",
+      "title": "9장: 트리 II",
+      "chapter": "Ch.09 — 전위·중위·후위 순회 · 레벨 순회 · 힙 트리",
+      "desc": "DFS vs BFS 순회 방식 이해. 힙과 우선순위 큐 연결 개념.",
+      "tags": ["tree"]
+    },
+    {
+      "num": "W15", "date": "07/24", "phase": 3, "status": "upcoming",
+      "title": "10장: 해시",
+      "chapter": "Ch.10 — 해시 함수 · 체이닝 · 개방 주소법 · 파이썬 dict",
+      "desc": "해시 충돌 해결 전략 비교. 파이썬 딕셔너리의 내부 동작 이해.",
+      "tags": ["hash"]
+    },
+    {
+      "num": "W16", "date": "07/31", "phase": 4, "status": "upcoming",
+      "title": "보충: 코딩 테스트 적용 실습",
+      "chapter": "정렬 · 탐색 · 스택/큐 · DP 기초 문제 모아 풀기",
+      "desc": "배운 자료구조를 실제 백준/프로그래머스 문제에 적용하는 패턴 정리.",
+      "tags": ["review"]
+    },
+    {
+      "num": "W17", "date": "08/07", "phase": 4, "status": "upcoming",
+      "title": "🎉 최종 회고 & 마무리",
+      "chapter": "전 챕터 Q&A · 개인 발표 · 다음 스텝 논의",
+      "desc": "각자 가장 어려웠던 개념 발표 + 스터디 이후 공부 방향(그래프, DP 심화 등) 논의.",
+      "tags": ["recap"]
+    }
+  ]
+}
