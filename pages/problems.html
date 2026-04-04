@@ -76,6 +76,11 @@
   .file-name { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
   .file-ext  { font-family: var(--mono); font-size: 10px; color: var(--muted); }
 
+  .file-sublist { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; margin-left: 28px; }
+  .file-item.solved { border-color: rgba(123,255,192,0.12); }
+  .file-item.solved .file-icon { color: var(--accent); }
+  .file-item.solved:hover { border-color: rgba(123,255,192,0.4); background: rgba(123,255,192,0.04); }
+
   .github-link {
     display: flex; align-items: center; justify-content: center;
     width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
@@ -207,7 +212,7 @@
   const modalLoading = document.getElementById('modalLoading');
   const mdContent    = document.getElementById('mdContent');
 
-  function openModal({ rawUrl, githubUrl, title, weekLabel }) {
+  function openModal({ rawUrl, githubUrl, title, weekLabel, isCode = false }) {
     modalTitle.textContent     = title;
     modalWeek.textContent      = weekLabel;
     modalGithub.href           = githubUrl;
@@ -220,7 +225,12 @@
     fetch(rawUrl)
       .then(r => r.text())
       .then(raw => {
-        mdContent.innerHTML     = marked.parse(raw);
+        if (isCode) {
+          const escaped = raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+          mdContent.innerHTML = `<pre><code>${escaped}</code></pre>`;
+        } else {
+          mdContent.innerHTML = marked.parse(raw);
+        }
         modalLoading.style.display = 'none';
         mdContent.style.display    = 'block';
       })
@@ -309,6 +319,41 @@
         });
 
         list.appendChild(card);
+
+        // solved/*.py 파일 목록 가져오기
+        fetch(`https://api.github.com/repos/${REPO}/contents/${folder}/solved?ref=${BRANCH}`)
+          .then(r => r.ok ? r.json() : [])
+          .then(files => {
+            const pyFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.py') && f.name !== 'template.py');
+            if (!pyFiles.length) return;
+            const fileList = card.querySelector('.file-list');
+            const subList  = document.createElement('div');
+            subList.className = 'file-sublist';
+            pyFiles.forEach(f => {
+              const name = f.name.replace('.py', '');
+              const item = document.createElement('div');
+              item.className = 'file-item solved';
+              item.innerHTML = `
+                <span class="file-icon">PY</span>
+                <span class="file-name">${name}</span>
+                <span class="file-ext">.py</span>
+                <a class="github-link" href="${f.html_url}" target="_blank" rel="noopener" title="GitHub에서 보기">${GITHUB_ICON}</a>
+              `;
+              item.addEventListener('click', e => {
+                if (e.target.closest('.github-link')) return;
+                openModal({
+                  rawUrl:    f.download_url,
+                  githubUrl: f.html_url,
+                  title:     f.name,
+                  weekLabel: `${w.num} · ${w.title}`,
+                  isCode:    true,
+                });
+              });
+              subList.appendChild(item);
+            });
+            fileList.appendChild(subList);
+          })
+          .catch(() => {});
       });
     });
 </script>
