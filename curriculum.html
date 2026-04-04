@@ -259,21 +259,29 @@
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const dates = weeks.map(w => {
+    const thursdays = weeks.map(w => {
       const [mm, dd] = w.date.split('/');
       return new Date(year, parseInt(mm) - 1, parseInt(dd));
     });
 
     let currentIdx = -1;
-    for (let i = 0; i < dates.length; i++) {
-      if (dates[i] <= today) currentIdx = i;
-    }
-    if (currentIdx === -1) currentIdx = 0;
+    for (let i = 0; i < thursdays.length; i++) {
+      const weekEnd = thursdays[i];
+      const weekStart = i === 0
+        ? new Date(0)
+        : new Date(thursdays[i - 1].getTime() + 86400000);
 
-    const allPast = dates[dates.length - 1] < today;
+      if (today >= weekStart && today <= weekEnd) {
+        currentIdx = i;
+        break;
+      }
+    }
+
+    if (currentIdx === -1) {
+      return weeks.map(w => ({ ...w, status: 'done' }));
+    }
 
     return weeks.map((w, i) => {
-      if (allPast) return { ...w, status: 'done' };
       if (i < currentIdx) return { ...w, status: 'done' };
       if (i === currentIdx) return { ...w, status: 'current' };
       return { ...w, status: 'upcoming' };

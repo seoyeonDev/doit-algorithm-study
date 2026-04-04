@@ -268,25 +268,34 @@
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const dates = weeks.map(w => {
+    // 각 주차의 목요일(= weeks.json의 date) 파싱
+    const thursdays = weeks.map(w => {
       const [mm, dd] = w.date.split('/');
       return new Date(year, parseInt(mm) - 1, parseInt(dd));
     });
 
-    // 오늘 날짜 이전인 마지막 주차 = current
+    // 주차 단위: 금요일 ~ 목요일 (목요일이 주차 마지막 날)
+    // week[i] 범위: thursdays[i-1] + 1일(금) ~ thursdays[i](목)
+    // week[0] 범위: -∞ ~ thursdays[0]
     let currentIdx = -1;
-    for (let i = 0; i < dates.length; i++) {
-      if (dates[i] <= today) currentIdx = i;
+    for (let i = 0; i < thursdays.length; i++) {
+      const weekEnd = thursdays[i];
+      const weekStart = i === 0
+        ? new Date(0)
+        : new Date(thursdays[i - 1].getTime() + 86400000); // 이전 목요일 + 1일 = 금요일
+
+      if (today >= weekStart && today <= weekEnd) {
+        currentIdx = i;
+        break;
+      }
     }
 
-    // 모든 주차가 미래이면 첫 주차를 current로
-    if (currentIdx === -1) currentIdx = 0;
-
-    // 모든 주차가 과거이면 current 없이 전부 done
-    const allPast = dates[dates.length - 1] < today;
+    // 모든 주차가 지났으면 전부 done
+    if (currentIdx === -1) {
+      return weeks.map(w => ({ ...w, status: 'done' }));
+    }
 
     return weeks.map((w, i) => {
-      if (allPast) return { ...w, status: 'done' };
       if (i < currentIdx) return { ...w, status: 'done' };
       if (i === currentIdx) return { ...w, status: 'current' };
       return { ...w, status: 'upcoming' };
