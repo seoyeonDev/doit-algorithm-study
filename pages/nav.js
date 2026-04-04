@@ -2,9 +2,9 @@
   const path = window.location.pathname;
 
   const links = [
-    { href: '/',              label: '홈',       match: ['/', '/index.html'] },
-    { href: '/problems.html', label: '문제 모음', match: ['/problems.html'] },
-    { href: '/summaries.html',label: '요약 모음', match: ['/summaries.html'] },
+    { href: '/pages/index.html',     label: '홈',       match: ['/pages/', '/pages/index.html'] },
+    { href: '/pages/problems.html',  label: '문제 모음', match: ['/pages/problems.html'] },
+    { href: '/pages/summaries.html', label: '요약 모음', match: ['/pages/summaries.html'] },
   ];
 
   const style = document.createElement('style');
@@ -66,7 +66,7 @@
   nav.className = 'site-nav';
   nav.innerHTML = `
     <div class="site-nav-inner">
-      <a class="nav-logo" href="/"><span class="nav-logo-dot"></span>Do it! 알고리즘</a>
+      <a class="nav-logo" href="/pages/index.html"><span class="nav-logo-dot"></span>Do it! 알고리즘</a>
       <div class="nav-links">
         ${links.map(l => `
           <a class="nav-link ${l.match.includes(path) ? 'active' : ''}" href="${l.href}">${l.label}</a>
