@@ -413,7 +413,7 @@
   }
 
   function mountSolvedPyList(card, w, folder, files, prMap) {
-    const pyFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.py') && f.name !== 'template.py');
+    const pyFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.py'));
     if (!pyFiles.length) return;
     const fileList = card.querySelector('.file-list');
     const subList  = document.createElement('div');
@@ -484,7 +484,7 @@
       const list = document.getElementById('weekList');
       const solvedDirMap = loadSolvedDirMap();
 
-      computed.filter(w => w.num !== 'W00').forEach(w => {
+      computed.forEach(w => {
         const folder    = weekFolder(w.num);
         const githubUrl = `https://github.com/${REPO}/blob/${BRANCH}/${folder}/problem/problem.md`;
         const rawUrl    = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${folder}/problem/problem.md`;
