@@ -2,7 +2,7 @@
   const path = window.location.pathname;
 
   const links = [
-    { href: 'pages/index.html',     label: '홈',       match: ['/pages/', '/pages/index.html'] },
+    { href: '/pages/index.html',     label: '홈',       match: ['/pages/', '/pages/index.html'] },
     { href: '/pages/problems.html',  label: '문제 모음', match: ['/pages/problems.html'] },
     { href: '/pages/summaries.html', label: '요약 모음', match: ['/pages/summaries.html'] },
   ];
