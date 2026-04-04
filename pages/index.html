@@ -224,7 +224,7 @@
 
   <div class="board-header">
     <div class="board-title">주차별 일정</div>
-    <a class="curriculum-link" href="curriculum.html">커리큘럼 보기 →</a>
+    <a class="curriculum-link" href="/pages/curriculum.html">커리큘럼 보기 →</a>
   </div>
 
   <div class="board-col-head">
@@ -261,7 +261,7 @@
 
 </div>
 
-<script src="nav.js"></script>
+<script src="/pages/nav.js"></script>
 <script>
   const STATUS_LABEL = { done: '완료', current: '진행중', upcoming: '예정' };
 
@@ -303,7 +303,7 @@
     });
   }
 
-  fetch('weeks.json')
+  fetch('/pages/weeks.json')
     .then(r => r.json())
     .then(({ weeks, year }) => {
       const computed = computeStatus(weeks, year);

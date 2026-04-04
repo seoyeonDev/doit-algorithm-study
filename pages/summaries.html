@@ -216,7 +216,7 @@
   </div>
 </div>
 
-<script src="nav.js"></script>
+<script src="/pages/nav.js"></script>
 <script>
   const REPO = 'seoyeonDev/doit-algorithm-study';
   const BRANCH = 'main';
@@ -292,7 +292,7 @@
   }
 
   // ── Render ──
-  fetch('weeks.json')
+  fetch('/pages/weeks.json')
     .then(r => r.json())
     .then(({ weeks, year }) => {
       const computed = computeStatus(weeks, year);
