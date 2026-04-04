@@ -1,0 +1,74 @@
+name: Run Solved Files
+
+on:
+  pull_request:
+    paths:
+      - '**/solved/*.py'
+
+jobs:
+  run-solutions:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run solutions
+        run: |
+          git diff --name-only origin/${{ github.base_ref }}...HEAD \
+            | grep 'solved/.*\.py$' > changed_files.txt || true
+
+          python3 - << 'EOF'
+          import subprocess, pathlib
+
+          files = pathlib.Path('changed_files.txt').read_text().strip().splitlines()
+          files = [f for f in files if f]
+
+          lines = ['## 🤖 풀이 실행 결과\n']
+
+          if not files:
+              lines.append('변경된 `solved/*.py` 파일이 없습니다.')
+          else:
+              for f in files:
+                  lines.append(f'### `{f}`')
+                  try:
+                      r = subprocess.run(
+                          ['python3', f],
+                          capture_output=True, text=True, timeout=10
+                      )
+                      status = '✅ 성공' if r.returncode == 0 else '❌ 오류'
+                      lines.append(status)
+                      out = (r.stdout + r.stderr).strip()
+                      if out:
+                          lines.append(f'```\n{out[:3000]}\n```')
+                  except subprocess.TimeoutExpired:
+                      lines.append('⏱️ 시간 초과 (10s 초과)')
+                  lines.append('')
+
+          pathlib.Path('result.md').write_text('\n'.join(lines))
+          EOF
+
+      - name: Find existing comment
+        id: find-comment
+        uses: peter-evans/find-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: github-actions[bot]
+          body-includes: '🤖 풀이 실행 결과'
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: result.md
+          edit-mode: replace
