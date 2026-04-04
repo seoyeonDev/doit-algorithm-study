@@ -263,6 +263,43 @@
     return new Date(iso).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
 
+  const PR_COMMENTS_CACHE_KEY = `pr_comments_${REPO}`;
+
+  function loadPRCommentsMap() {
+    try {
+      return JSON.parse(sessionStorage.getItem(PR_COMMENTS_CACHE_KEY) || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  function savePRCommentsMap(map) {
+    sessionStorage.setItem(PR_COMMENTS_CACHE_KEY, JSON.stringify(map));
+  }
+
+  /** 이슈 댓글 + 리뷰 댓글 병합(시간순). 같은 PR은 sessionStorage에 한 번만 담음 */
+  function fetchMergedPRComments(prNumber) {
+    const ns = String(prNumber);
+    const map = loadPRCommentsMap();
+    if (Object.hasOwn(map, ns)) {
+      return Promise.resolve(map[ns]);
+    }
+    return Promise.all([
+      fetch(ghApi(`repos/${REPO}/issues/${prNumber}/comments`)).then(r => r.ok ? r.json() : []),
+      fetch(ghApi(`repos/${REPO}/pulls/${prNumber}/comments`)).then(r => r.ok ? r.json() : []),
+    ])
+      .then(([issue, review]) =>
+        [...issue, ...review].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+      )
+      .then(merged => {
+        const m = loadPRCommentsMap();
+        m[ns] = merged;
+        savePRCommentsMap(m);
+        return merged;
+      })
+      .catch(() => []);
+  }
+
   function renderComments(comments) {
     if (!comments.length) return `<div class="pr-no-comments">아직 댓글이 없어요.</div>`;
     return comments.map(c => {
@@ -295,14 +332,7 @@
     document.body.style.overflow = 'hidden';
 
     const codePromise = fetch(rawUrl).then(r => r.text());
-    const commentsPromise = pr
-      ? Promise.all([
-          fetch(ghApi(`repos/${REPO}/issues/${pr.number}/comments`)).then(r => r.ok ? r.json() : []),
-          fetch(ghApi(`repos/${REPO}/pulls/${pr.number}/comments`)).then(r => r.ok ? r.json() : []),
-        ]).then(([issue, review]) =>
-          [...issue, ...review].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-        ).catch(() => [])
-      : Promise.resolve(null);
+    const commentsPromise = pr ? fetchMergedPRComments(pr.number) : Promise.resolve(null);
 
     Promise.all([codePromise, commentsPromise])
       .then(([raw, comments]) => {
