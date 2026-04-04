@@ -81,6 +81,18 @@
   .file-item.solved .file-icon { color: var(--accent); }
   .file-item.solved:hover { border-color: rgba(123,255,192,0.4); background: rgba(123,255,192,0.04); }
 
+  .pr-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--mono); font-size: 9px; font-weight: 700;
+    padding: 2px 7px; border-radius: 100px; border: 1px solid;
+    text-decoration: none; white-space: nowrap; flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
+  .pr-badge:hover { opacity: 0.7; }
+  .pr-open   { color: var(--accent2); border-color: rgba(91,212,240,0.4);  background: rgba(91,212,240,0.08); }
+  .pr-merged { color: var(--accent);  border-color: rgba(123,255,192,0.4); background: rgba(123,255,192,0.08); }
+  .pr-closed { color: var(--muted);   border-color: rgba(122,127,142,0.3); background: rgba(122,127,142,0.07); }
+
   .github-link {
     display: flex; align-items: center; justify-content: center;
     width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
@@ -266,10 +278,39 @@
     return `week${String(parseInt(num.replace('W',''))).padStart(2,'0')}`;
   }
 
+  const PR_ICON = `<svg viewBox="0 0 16 16" width="10" height="10" fill="currentColor"><path d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"/></svg>`;
+
+  // ── PR Map (file path → PR info) ──
+  async function buildPRMap() {
+    const CACHE_KEY = `pr_map_${REPO}`;
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) return JSON.parse(cached);
+
+    const prs = await fetch(`https://api.github.com/repos/${REPO}/pulls?state=all&per_page=100`)
+      .then(r => r.ok ? r.json() : []).catch(() => []);
+
+    const map = {};
+    await Promise.all(prs.map(pr =>
+      fetch(`https://api.github.com/repos/${REPO}/pulls/${pr.number}/files?per_page=100`)
+        .then(r => r.ok ? r.json() : [])
+        .then(files => {
+          const state = pr.merged_at ? 'merged' : pr.state;
+          files.forEach(f => {
+            map[f.filename] = { number: pr.number, url: pr.html_url, state };
+          });
+        })
+        .catch(() => {})
+    ));
+
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify(map));
+    return map;
+  }
+
   // ── Render ──
-  fetch('/pages/weeks.json')
-    .then(r => r.json())
-    .then(({ weeks, year }) => {
+  Promise.all([
+    fetch('/pages/weeks.json').then(r => r.json()),
+    buildPRMap(),
+  ]).then(([{ weeks, year }, prMap]) => {
       const computed = computeStatus(weeks, year);
       const list = document.getElementById('weekList');
 
@@ -330,17 +371,22 @@
             const subList  = document.createElement('div');
             subList.className = 'file-sublist';
             pyFiles.forEach(f => {
-              const name = f.name.replace('.py', '');
+              const name  = f.name.replace('.py', '');
+              const pr    = prMap[`${folder}/solved/${f.name}`];
+              const prTag = pr
+                ? `<a class="pr-badge pr-${pr.state}" href="${pr.url}" target="_blank" rel="noopener">${PR_ICON} #${pr.number}</a>`
+                : '';
               const item = document.createElement('div');
               item.className = 'file-item solved';
               item.innerHTML = `
                 <span class="file-icon">PY</span>
                 <span class="file-name">${name}</span>
                 <span class="file-ext">.py</span>
+                ${prTag}
                 <a class="github-link" href="${f.html_url}" target="_blank" rel="noopener" title="GitHub에서 보기">${GITHUB_ICON}</a>
               `;
               item.addEventListener('click', e => {
-                if (e.target.closest('.github-link')) return;
+                if (e.target.closest('.github-link') || e.target.closest('.pr-badge')) return;
                 openModal({
                   rawUrl:    f.download_url,
                   githubUrl: f.html_url,
