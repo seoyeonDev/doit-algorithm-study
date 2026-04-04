@@ -264,11 +264,41 @@
 <script>
   const STATUS_LABEL = { done: '완료', current: '진행중', upcoming: '예정' };
 
+  function computeStatus(weeks, year) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dates = weeks.map(w => {
+      const [mm, dd] = w.date.split('/');
+      return new Date(year, parseInt(mm) - 1, parseInt(dd));
+    });
+
+    // 오늘 날짜 이전인 마지막 주차 = current
+    let currentIdx = -1;
+    for (let i = 0; i < dates.length; i++) {
+      if (dates[i] <= today) currentIdx = i;
+    }
+
+    // 모든 주차가 미래이면 첫 주차를 current로
+    if (currentIdx === -1) currentIdx = 0;
+
+    // 모든 주차가 과거이면 current 없이 전부 done
+    const allPast = dates[dates.length - 1] < today;
+
+    return weeks.map((w, i) => {
+      if (allPast) return { ...w, status: 'done' };
+      if (i < currentIdx) return { ...w, status: 'done' };
+      if (i === currentIdx) return { ...w, status: 'current' };
+      return { ...w, status: 'upcoming' };
+    });
+  }
+
   fetch('weeks.json')
     .then(r => r.json())
-    .then(({ weeks }) => {
+    .then(({ weeks, year }) => {
+      const computed = computeStatus(weeks, year);
       const board = document.getElementById('board');
-      board.innerHTML = weeks.map(w => `
+      board.innerHTML = computed.map(w => `
         <div class="board-row ${w.status}">
           <div class="row-week">${w.num}</div>
           <div class="row-body">

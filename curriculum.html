@@ -128,6 +128,7 @@
     transition: border-color 0.2s, background 0.2s;
   }
   .session-row:hover { border-color: var(--border2); background: var(--surface2); }
+  .session-row.done { opacity: 0.55; }
 
   .session-num { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 2px; white-space: nowrap; }
   .session-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
@@ -254,14 +255,40 @@
 <script>
   const TAG_LABEL = { search: '검색', sort: '정렬', struct: '자료구조', tree: '트리', hash: '해시', review: '실전', basic: '기초', recap: '복습' };
 
+  function computeStatus(weeks, year) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dates = weeks.map(w => {
+      const [mm, dd] = w.date.split('/');
+      return new Date(year, parseInt(mm) - 1, parseInt(dd));
+    });
+
+    let currentIdx = -1;
+    for (let i = 0; i < dates.length; i++) {
+      if (dates[i] <= today) currentIdx = i;
+    }
+    if (currentIdx === -1) currentIdx = 0;
+
+    const allPast = dates[dates.length - 1] < today;
+
+    return weeks.map((w, i) => {
+      if (allPast) return { ...w, status: 'done' };
+      if (i < currentIdx) return { ...w, status: 'done' };
+      if (i === currentIdx) return { ...w, status: 'current' };
+      return { ...w, status: 'upcoming' };
+    });
+  }
+
   fetch('weeks.json')
     .then(r => r.json())
-    .then(({ phases, weeks }) => {
+    .then(({ phases, weeks, year }) => {
+      const computed = computeStatus(weeks, year);
       const container = document.getElementById('phases');
       container.innerHTML = phases.map(phase => {
-        const phaseWeeks = weeks.filter(w => w.phase === phase.id);
+        const phaseWeeks = computed.filter(w => w.phase === phase.id);
         const sessions = phaseWeeks.map(w => `
-          <div class="session-row">
+          <div class="session-row ${w.status === 'done' ? 'done' : ''}">
             <div class="session-num">${w.num}<br>${w.date}</div>
             <div class="session-body">
               <div class="session-title">${w.title}</div>
