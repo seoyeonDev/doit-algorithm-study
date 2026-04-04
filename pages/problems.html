@@ -358,6 +358,55 @@
 
   const PR_ICON = `<svg viewBox="0 0 16 16" width="10" height="10" fill="currentColor"><path d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"/></svg>`;
 
+  const SOLVED_DIR_CACHE_KEY = `solved_contents_${REPO}_${BRANCH}`;
+  function loadSolvedDirMap() {
+    try {
+      return JSON.parse(sessionStorage.getItem(SOLVED_DIR_CACHE_KEY) || '{}');
+    } catch {
+      return {};
+    }
+  }
+  function saveSolvedDirMap(map) {
+    sessionStorage.setItem(SOLVED_DIR_CACHE_KEY, JSON.stringify(map));
+  }
+
+  function mountSolvedPyList(card, w, folder, files, prMap) {
+    const pyFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.py') && f.name !== 'template.py');
+    if (!pyFiles.length) return;
+    const fileList = card.querySelector('.file-list');
+    const subList  = document.createElement('div');
+    subList.className = 'file-sublist';
+    pyFiles.forEach(f => {
+      const name  = f.name.replace('.py', '');
+      const pr    = prMap[`${folder}/solved/${f.name}`];
+      const prTag = pr
+        ? `<a class="pr-badge pr-${pr.state}" href="${pr.url}" target="_blank" rel="noopener">${PR_ICON} #${pr.number}</a>`
+        : '';
+      const item = document.createElement('div');
+      item.className = 'file-item solved';
+      item.innerHTML = `
+        <span class="file-icon">PY</span>
+        <span class="file-name">${name}</span>
+        <span class="file-ext">.py</span>
+        ${prTag}
+        <a class="github-link" href="${f.html_url}" target="_blank" rel="noopener" title="GitHub에서 보기">${GITHUB_ICON}</a>
+      `;
+      item.addEventListener('click', e => {
+        if (e.target.closest('.github-link') || e.target.closest('.pr-badge')) return;
+        openModal({
+          rawUrl:    f.download_url,
+          githubUrl: f.html_url,
+          title:     f.name,
+          weekLabel: `${w.num} · ${w.title}`,
+          isCode:    true,
+          pr:        pr || null,
+        });
+      });
+      subList.appendChild(item);
+    });
+    fileList.appendChild(subList);
+  }
+
   // ── PR Map (file path → PR info) ──
   async function buildPRMap() {
     const CACHE_KEY = `pr_map_${REPO}`;
@@ -391,6 +440,7 @@
   ]).then(([{ weeks, year }, prMap]) => {
       const computed = computeStatus(weeks, year);
       const list = document.getElementById('weekList');
+      const solvedDirMap = loadSolvedDirMap();
 
       computed.filter(w => w.num !== 'W00').forEach(w => {
         const folder    = weekFolder(w.num);
@@ -439,46 +489,18 @@
 
         list.appendChild(card);
 
-        // solved/*.py 파일 목록 가져오기
-        fetch(ghApi(`repos/${REPO}/contents/${folder}/solved?ref=${BRANCH}`))
-          .then(r => r.ok ? r.json() : [])
-          .then(files => {
-            const pyFiles = files.filter(f => f.type === 'file' && f.name.endsWith('.py') && f.name !== 'template.py');
-            if (!pyFiles.length) return;
-            const fileList = card.querySelector('.file-list');
-            const subList  = document.createElement('div');
-            subList.className = 'file-sublist';
-            pyFiles.forEach(f => {
-              const name  = f.name.replace('.py', '');
-              const pr    = prMap[`${folder}/solved/${f.name}`];
-              const prTag = pr
-                ? `<a class="pr-badge pr-${pr.state}" href="${pr.url}" target="_blank" rel="noopener">${PR_ICON} #${pr.number}</a>`
-                : '';
-              const item = document.createElement('div');
-              item.className = 'file-item solved';
-              item.innerHTML = `
-                <span class="file-icon">PY</span>
-                <span class="file-name">${name}</span>
-                <span class="file-ext">.py</span>
-                ${prTag}
-                <a class="github-link" href="${f.html_url}" target="_blank" rel="noopener" title="GitHub에서 보기">${GITHUB_ICON}</a>
-              `;
-              item.addEventListener('click', e => {
-                if (e.target.closest('.github-link') || e.target.closest('.pr-badge')) return;
-                openModal({
-                  rawUrl:    f.download_url,
-                  githubUrl: f.html_url,
-                  title:     f.name,
-                  weekLabel: `${w.num} · ${w.title}`,
-                  isCode:    true,
-                  pr:        pr || null,
-                });
-              });
-              subList.appendChild(item);
-            });
-            fileList.appendChild(subList);
-          })
-          .catch(() => {});
+        if (Object.hasOwn(solvedDirMap, folder)) {
+          mountSolvedPyList(card, w, folder, solvedDirMap[folder], prMap);
+        } else {
+          fetch(ghApi(`repos/${REPO}/contents/${folder}/solved?ref=${BRANCH}`))
+            .then(r => r.ok ? r.json() : [])
+            .then(files => {
+              solvedDirMap[folder] = files;
+              saveSolvedDirMap(solvedDirMap);
+              mountSolvedPyList(card, w, folder, files, prMap);
+            })
+            .catch(() => {});
+        }
       });
     });
 </script>

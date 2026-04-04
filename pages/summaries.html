@@ -283,11 +283,33 @@
     return weeks.map((w, i) => ({ ...w, status: i < currentIdx ? 'done' : i === currentIdx ? 'current' : 'upcoming' }));
   }
 
-  async function fetchSummaries(folder) {
+  const SUMMARY_DIR_CACHE_KEY = `summary_contents_${REPO}_${BRANCH}`;
+
+  function loadSummaryDirMap() {
+    try {
+      return JSON.parse(sessionStorage.getItem(SUMMARY_DIR_CACHE_KEY) || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  function saveSummaryDirMap(map) {
+    sessionStorage.setItem(SUMMARY_DIR_CACHE_KEY, JSON.stringify(map));
+  }
+
+  function filterSummaryFiles(raw) {
+    return raw.filter(f => f.type === 'file' && f.name !== '.gitkeep');
+  }
+
+  async function fetchSummaries(folder, summaryDirMap) {
+    if (Object.hasOwn(summaryDirMap, folder)) {
+      return filterSummaryFiles(summaryDirMap[folder]);
+    }
     const res = await fetch(ghApi(`repos/${REPO}/contents/${folder}/summary?ref=${BRANCH}`));
-    if (!res.ok) return [];
-    const files = await res.json();
-    return files.filter(f => f.type === 'file' && f.name !== '.gitkeep');
+    const raw = res.ok ? await res.json() : [];
+    summaryDirMap[folder] = raw;
+    saveSummaryDirMap(summaryDirMap);
+    return filterSummaryFiles(raw);
   }
 
   function weekFolder(num) {
@@ -300,6 +322,7 @@
     .then(({ weeks, year }) => {
       const computed = computeStatus(weeks, year);
       const list = document.getElementById('weekList');
+      const summaryDirMap = loadSummaryDirMap();
 
       computed.filter(w => w.num !== 'W00').forEach(w => {
         const folder = weekFolder(w.num);
@@ -336,7 +359,7 @@
 
           if (opening && !loaded) {
             loaded = true;
-            const files = await fetchSummaries(folder);
+            const files = await fetchSummaries(folder, summaryDirMap);
             countEl.textContent = `${files.length}개`;
             if (files.length > 0) countEl.classList.add('has-files');
 
