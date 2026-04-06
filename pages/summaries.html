@@ -332,7 +332,7 @@
       const list = document.getElementById('weekList');
       const summaryDirMap = loadSummaryDirMap();
 
-      computed.filter(w => w.num !== 'W00').forEach(w => {
+      computed.forEach(w => {
         const folder = weekFolder(w.num);
         const card = document.createElement('div');
         card.className = 'week-card';
