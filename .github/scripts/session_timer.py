@@ -94,7 +94,7 @@ def build_payload(session: dict, elapsed_min: int, end_time: datetime) -> dict:
         fields.append({"name": "⏳ 남은 시간", "value": session["duration"], "inline": True})
     fields.append({
         "name": "🕐 종료 예정",
-        "value": end_time.strftime("%H:%M"),
+        "value": f"<t:{int(end_time.timestamp())}:t> (<t:{int(end_time.timestamp())}:R>)",
         "inline": True,
     })
 
