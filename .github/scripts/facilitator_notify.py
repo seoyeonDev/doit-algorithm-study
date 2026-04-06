@@ -6,8 +6,8 @@ weeks.json의 W01~W17 순서대로 멤버를 순환(round-robin) 배정합니다
 import json
 import datetime
 import os
+import subprocess
 import sys
-import urllib.request
 
 WEEKS_JSON = "pages/weeks.json"
 CONFIG_JSON = ".github/facilitator-config.json"
@@ -42,16 +42,16 @@ def find_current_week(weeks, year):
 
 
 def send_discord(webhook_url, payload):
-    body = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        webhook_url,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
+    result = subprocess.run(
+        ["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+         "-X", "POST", webhook_url,
+         "-H", "Content-Type: application/json",
+         "-d", json.dumps(payload, ensure_ascii=False)],
+        capture_output=True, text=True,
     )
-    with urllib.request.urlopen(req) as res:
-        if res.status not in (200, 204):
-            raise RuntimeError(f"Discord webhook failed: {res.status}")
+    status = result.stdout.strip()
+    if status not in ("200", "204"):
+        raise RuntimeError(f"Discord webhook failed: {status}\n{result.stderr}")
 
 
 def mention(member):

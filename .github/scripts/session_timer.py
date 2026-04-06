@@ -14,10 +14,10 @@
 
 import json
 import os
+import subprocess
 import sys
 import threading
 import time
-import urllib.request
 from datetime import datetime, timedelta
 
 # ── 세션 일정 ────────────────────────────────────────────────────────────────
@@ -74,16 +74,16 @@ SCHEDULE = [
 
 # ── Discord 전송 ──────────────────────────────────────────────────────────────
 def send_discord(webhook_url: str, payload: dict) -> None:
-    body = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        webhook_url,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
+    result = subprocess.run(
+        ["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+         "-X", "POST", webhook_url,
+         "-H", "Content-Type: application/json",
+         "-d", json.dumps(payload, ensure_ascii=False)],
+        capture_output=True, text=True,
     )
-    with urllib.request.urlopen(req, timeout=10) as res:
-        if res.status not in (200, 204):
-            raise RuntimeError(f"Discord webhook 실패: {res.status}")
+    status = result.stdout.strip()
+    if status not in ("200", "204"):
+        raise RuntimeError(f"Discord webhook 실패: {status}\n{result.stderr}")
 
 
 def build_payload(session: dict, elapsed_min: int, end_time: datetime) -> dict:
