@@ -13,19 +13,9 @@ jobs:
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          python3 - <<'EOF'
-          import json, urllib.request, os
-          url = os.environ["WEBHOOK"].strip()
-          print(f"URL length: {len(url)}, starts with: {url[:30]}")
-          payload = {"embeds": [{"title": "🟢 오프닝", "description": "출석 확인 · 이번 주 챕터 리마인드 · 진행자 소개", "color": 16117992, "fields": [{"name": "⏱ 구간", "value": "00 — 05 min", "inline": True}, {"name": "⏳ 남은 시간", "value": "5분", "inline": True}], "footer": {"text": "Do it! 알고리즘 파이썬 스터디"}}]}
-          req = urllib.request.Request(url, json.dumps(payload).encode(), {"Content-Type": "application/json"}, method="POST")
-          try:
-            urllib.request.urlopen(req)
-          except urllib.error.HTTPError as e:
-            print(f"Discord 에러 응답: {e.read().decode()}")
-            raise
-          print("✅ 오프닝 알림 전송")
-          EOF
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"🟢 오프닝","description":"출석 확인 · 이번 주 챕터 리마인드 · 진행자 소개","color":16117992,"fields":[{"name":"⏱ 구간","value":"00 — 05 min","inline":true},{"name":"⏳ 남은 시간","value":"5분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
 
       - name: "⏳ 5분 대기 → 요약 공유"
         run: sleep 300
@@ -34,13 +24,9 @@ jobs:
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          python3 - <<'EOF'
-          import json, urllib.request, os
-          payload = {"embeds": [{"title": "📚 요약 공유", "description": "각자 핵심 내용 2~3가지 공유 (1인 약 5분)\n사전에 GitHub에 올린 요약 기반으로 · 질문은 토론 시간에", "color": 8126400, "fields": [{"name": "⏱ 구간", "value": "05 — 25 min", "inline": True}, {"name": "⏳ 남은 시간", "value": "20분", "inline": True}], "footer": {"text": "Do it! 알고리즘 파이썬 스터디"}}]}
-          req = urllib.request.Request(os.environ["WEBHOOK"], json.dumps(payload).encode(), {"Content-Type": "application/json"}, method="POST")
-          urllib.request.urlopen(req)
-          print("✅ 요약 공유 알림 전송")
-          EOF
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"📚 요약 공유","description":"각자 핵심 내용 2~3가지 공유 (1인 약 5분)\n사전에 GitHub에 올린 요약 기반으로 · 질문은 토론 시간에","color":8126400,"fields":[{"name":"⏱ 구간","value":"05 — 25 min","inline":true},{"name":"⏳ 남은 시간","value":"20분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
 
       - name: "⏳ 20분 대기 → 자유 토론"
         run: sleep 1200
@@ -49,13 +35,9 @@ jobs:
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          python3 - <<'EOF'
-          import json, urllib.request, os
-          payload = {"embeds": [{"title": "💬 자유 토론", "description": "어려웠던 개념 · 인사이트 공유 · 사전에 정해온 토론 주제\n진행자가 흐름 조율 · 결론보다 과정이 중요", "color": 11774184, "fields": [{"name": "⏱ 구간", "value": "25 — 40 min", "inline": True}, {"name": "⏳ 남은 시간", "value": "15분", "inline": True}], "footer": {"text": "Do it! 알고리즘 파이썬 스터디"}}]}
-          req = urllib.request.Request(os.environ["WEBHOOK"], json.dumps(payload).encode(), {"Content-Type": "application/json"}, method="POST")
-          urllib.request.urlopen(req)
-          print("✅ 자유 토론 알림 전송")
-          EOF
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"💬 자유 토론","description":"어려웠던 개념 · 인사이트 공유 · 사전에 정해온 토론 주제\n진행자가 흐름 조율 · 결론보다 과정이 중요","color":11774184,"fields":[{"name":"⏱ 구간","value":"25 — 40 min","inline":true},{"name":"⏳ 남은 시간","value":"15분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
 
       - name: "⏳ 15분 대기 → 코딩 문제 리뷰"
         run: sleep 900
@@ -64,13 +46,9 @@ jobs:
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          python3 - <<'EOF'
-          import json, urllib.request, os
-          payload = {"embeds": [{"title": "💻 코딩 문제 리뷰", "description": "문제 출제자가 문제 소개 · 각자 풀이 PR 기반으로 코드 리뷰\n못 풀었도 접근 방식 공유 · 더 나은 풀이 토론", "color": 16768936, "fields": [{"name": "⏱ 구간", "value": "40 — 55 min", "inline": True}, {"name": "⏳ 남은 시간", "value": "15분", "inline": True}], "footer": {"text": "Do it! 알고리즘 파이썬 스터디"}}]}
-          req = urllib.request.Request(os.environ["WEBHOOK"], json.dumps(payload).encode(), {"Content-Type": "application/json"}, method="POST")
-          urllib.request.urlopen(req)
-          print("✅ 코딩 문제 리뷰 알림 전송")
-          EOF
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"💻 코딩 문제 리뷰","description":"문제 출제자가 문제 소개 · 각자 풀이 PR 기반으로 코드 리뷰\n못 풀었도 접근 방식 공유 · 더 나은 풀이 토론","color":16768936,"fields":[{"name":"⏱ 구간","value":"40 — 55 min","inline":true},{"name":"⏳ 남은 시간","value":"15분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
 
       - name: "⏳ 15분 대기 → 마무리"
         run: sleep 900
@@ -79,13 +57,9 @@ jobs:
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          python3 - <<'EOF'
-          import json, urllib.request, os
-          payload = {"embeds": [{"title": "🏁 마무리", "description": "다음 주 챕터 확인 · 진행자 · 문제 출제자 지정", "color": 16117992, "fields": [{"name": "⏱ 구간", "value": "55 — 60 min", "inline": True}, {"name": "⏳ 남은 시간", "value": "5분", "inline": True}], "footer": {"text": "Do it! 알고리즘 파이썬 스터디"}}]}
-          req = urllib.request.Request(os.environ["WEBHOOK"], json.dumps(payload).encode(), {"Content-Type": "application/json"}, method="POST")
-          urllib.request.urlopen(req)
-          print("✅ 마무리 알림 전송")
-          EOF
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"🏁 마무리","description":"다음 주 챕터 확인 · 진행자 · 문제 출제자 지정","color":16117992,"fields":[{"name":"⏱ 구간","value":"55 — 60 min","inline":true},{"name":"⏳ 남은 시간","value":"5분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
 
       - name: "⏳ 5분 대기 → 종료"
         run: sleep 300
@@ -94,10 +68,6 @@ jobs:
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          python3 - <<'EOF'
-          import json, urllib.request, os
-          payload = {"embeds": [{"title": "✅ 스터디 종료", "description": "오늘도 수고하셨습니다! 🎉", "color": 8126400, "footer": {"text": "Do it! 알고리즘 파이썬 스터디"}}]}
-          req = urllib.request.Request(os.environ["WEBHOOK"], json.dumps(payload).encode(), {"Content-Type": "application/json"}, method="POST")
-          urllib.request.urlopen(req)
-          print("✅ 종료 알림 전송")
-          EOF
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"✅ 스터디 종료","description":"오늘도 수고하셨습니다! 🎉","color":8126400,"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
