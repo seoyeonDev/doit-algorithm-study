@@ -1,4 +1,4 @@
-# 🐍 python-dsa-study
+# 🐍 doit-algorithm-study
 
 > Do it! 자료구조와 함께 배우는 알고리즘 입문 — 파이썬 편  
 > 2025.04.09 ~ 07.31 · 주 1회 · 1시간 · 총 17회
