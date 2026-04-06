@@ -5,8 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>스터디 커리큘럼 — Do it! 자료구조와 알고리즘 파이썬 편</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./web/variable/pretendardvariable.css">
 <style>
+  @font-face {
+    font-family: 'Pretendard Variable';
+    font-weight: 45 920;
+    font-style: normal;
+    font-display: swap;
+    src: url('./web/variable/woff2/PretendardVariable.woff2') format('woff2-variations');
+  }
+  html { font-family: 'Pretendard Variable', sans-serif; }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -54,9 +61,9 @@
 
   .container {
     position: relative; z-index: 1;
-    max-width: 720px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 60px 24px 100px;
+    padding: 32px 40px 60px;
   }
 
   .top-tag {
@@ -75,7 +82,7 @@
 
   h1 {
     font-family: var(--mono);
-    font-size: clamp(22px, 4.5vw, 34px);
+    font-size: clamp(28px, 4.5vw, 40px);
     font-weight: 700; line-height: 1.2;
     margin-bottom: 10px;
     animation: fadeUp 0.5s 0.1s ease both;
@@ -84,7 +91,7 @@
   .hl2 { color: var(--accent2); }
 
   .subtitle {
-    font-size: 15px; color: var(--muted);
+    font-size: 17px; color: var(--muted);
     line-height: 1.7; margin-bottom: 40px;
     animation: fadeUp 0.5s 0.2s ease both;
   }
@@ -96,9 +103,9 @@
   }
   @media (max-width: 560px) { .meta-grid { grid-template-columns: 1fr 1fr; } }
 
-  .meta-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 14px; }
-  .meta-label { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
-  .meta-value { font-size: 13px; font-weight: 600; line-height: 1.4; }
+  .meta-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 16px; }
+  .meta-label { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+  .meta-value { font-size: 15px; font-weight: 600; line-height: 1.4; }
   .meta-value.c1 { color: var(--accent); font-family: var(--mono); }
   .meta-value.c2 { color: var(--accent2); }
   .meta-value.c3 { color: var(--accent3); }
@@ -122,22 +129,22 @@
   .sessions { display: flex; flex-direction: column; gap: 8px; }
 
   .session-row {
-    display: grid; grid-template-columns: 48px 1fr auto;
+    display: grid; grid-template-columns: 58px 1fr auto;
     align-items: start; gap: 14px;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 18px;
+    border-radius: 12px; padding: 18px 22px;
     transition: border-color 0.2s, background 0.2s;
   }
   .session-row:hover { border-color: var(--border2); background: var(--surface2); }
   .session-row.done { opacity: 0.55; }
 
-  .session-num { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 2px; white-space: nowrap; }
-  .session-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .session-chapters { font-family: var(--mono); font-size: 11px; color: var(--accent2); margin-bottom: 6px; }
-  .session-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .session-num { font-family: var(--mono); font-size: 13px; color: var(--muted); padding-top: 2px; white-space: nowrap; }
+  .session-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .session-chapters { font-family: var(--mono); font-size: 13px; color: var(--accent2); margin-bottom: 6px; }
+  .session-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
   .session-tags { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex-shrink: 0; }
-  .tag { font-family: var(--mono); font-size: 9px; padding: 3px 8px; border-radius: 100px; border: 1px solid; white-space: nowrap; }
+  .tag { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 100px; border: 1px solid; white-space: nowrap; }
   .tag.search { color: #5bd4f0; border-color: rgba(91,212,240,0.25); }
   .tag.sort   { color: #7bffc0; border-color: rgba(123,255,192,0.25); }
   .tag.struct { color: #f0b45b; border-color: rgba(240,180,91,0.25); }
@@ -160,15 +167,15 @@
   .prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 40px; animation: fadeUp 0.5s 0.4s ease both; }
   @media (max-width: 480px) { .prob-grid { grid-template-columns: 1fr; } }
 
-  .prob-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
-  .prob-card-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .prob-card-title .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .prob-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+  .prob-card-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .prob-card-title .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .dot-green { background: var(--accent); }
   .dot-blue  { background: var(--accent2); }
   .prob-list { list-style: none; }
-  .prob-list li { font-size: 12px; color: var(--muted); padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .prob-list li { font-size: 14px; color: var(--muted); padding: 7px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .prob-list li:last-child { border-bottom: none; }
-  .prob-list li span { font-family: var(--mono); font-size: 10px; color: var(--accent3); }
+  .prob-list li span { font-family: var(--mono); font-size: 12px; color: var(--accent3); }
 
   .footer { margin-top: 48px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--muted); animation: fadeUp 0.5s 0.5s ease both; }
 

@@ -5,8 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Do it! 알고리즘 스터디</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./web/variable/pretendardvariable.css">
 <style>
+  @font-face {
+    font-family: 'Pretendard Variable';
+    font-weight: 45 920;
+    font-style: normal;
+    font-display: swap;
+    src: url('./web/variable/woff2/PretendardVariable.woff2') format('woff2-variations');
+  }
+  html { font-family: 'Pretendard Variable', sans-serif; }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -54,16 +61,16 @@
 
   .container {
     position: relative; z-index: 1;
-    max-width: 800px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 60px 24px 100px;
+    padding: 32px 40px 60px;
   }
 
   .top-tag {
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    font-family: var(--mono); font-size: 13px; color: var(--accent);
     border: 1px solid rgba(123,255,192,0.25);
-    padding: 6px 14px; border-radius: 100px;
+    padding: 7px 16px; border-radius: 100px;
     margin-bottom: 28px;
     animation: fadeUp 0.5s ease both;
   }
@@ -75,7 +82,7 @@
 
   h1 {
     font-family: var(--mono);
-    font-size: clamp(20px, 4vw, 30px);
+    font-size: clamp(26px, 4vw, 36px);
     font-weight: 700; line-height: 1.25;
     margin-bottom: 10px;
     animation: fadeUp 0.5s 0.1s ease both;
@@ -84,7 +91,7 @@
   .hl2 { color: var(--accent2); }
 
   .subtitle {
-    font-size: 14px; color: var(--muted);
+    font-size: 16px; color: var(--muted);
     line-height: 1.7; margin-bottom: 36px;
     animation: fadeUp 0.5s 0.2s ease both;
   }
@@ -98,13 +105,13 @@
 
   .meta-card {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px;
+    border-radius: 12px; padding: 18px 16px;
   }
   .meta-label {
-    font-family: var(--mono); font-size: 9px; color: var(--muted);
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
     letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px;
   }
-  .meta-value { font-size: 13px; font-weight: 600; line-height: 1.4; }
+  .meta-value { font-size: 15px; font-weight: 600; line-height: 1.4; }
   .meta-value.c1 { color: var(--accent); font-family: var(--mono); }
   .meta-value.c2 { color: var(--accent2); }
   .meta-value.c3 { color: var(--accent3); }
@@ -137,35 +144,35 @@
 
   .board-col-head {
     display: grid;
-    grid-template-columns: 56px 1fr 90px 80px;
+    grid-template-columns: 70px 1fr 110px 100px;
     gap: 12px;
-    padding: 0 18px 8px;
-    font-family: var(--mono); font-size: 10px; color: var(--muted);
+    padding: 0 22px 10px;
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
     letter-spacing: 0.1em; text-transform: uppercase;
     border-bottom: 1px solid var(--border);
   }
 
   .board-row {
     display: grid;
-    grid-template-columns: 56px 1fr 90px 80px;
+    grid-template-columns: 70px 1fr 110px 100px;
     gap: 12px; align-items: center;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 18px;
+    border-radius: 12px; padding: 18px 22px;
     transition: border-color 0.2s, background 0.2s;
   }
   .board-row:hover { border-color: var(--border2); background: var(--surface2); }
   .board-row.done { opacity: 0.6; }
   .board-row.current { border-color: rgba(123,255,192,0.3); }
 
-  .row-week { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
-  .row-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .row-chapter { font-family: var(--mono); font-size: 10px; color: var(--accent2); }
-  .row-date { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .row-week { font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .row-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row-chapter { font-family: var(--mono); font-size: 12px; color: var(--accent2); }
+  .row-date { font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
   .row-status { display: flex; justify-content: flex-end; }
 
   .status-badge {
-    font-family: var(--mono); font-size: 9px; font-weight: 700;
-    padding: 3px 10px; border-radius: 100px; border: 1px solid; white-space: nowrap;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    padding: 4px 12px; border-radius: 100px; border: 1px solid; white-space: nowrap;
   }
   .status-done     { color: var(--muted); border-color: rgba(122,127,142,0.3); background: rgba(122,127,142,0.07); }
   .status-current  { color: var(--accent); border-color: rgba(123,255,192,0.4); background: rgba(123,255,192,0.1); }
@@ -179,13 +186,13 @@
   }
   @media (max-width: 480px) { .rules-grid { grid-template-columns: 1fr; } }
 
-  .rule-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
-  .rule-card-title { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
-  .rule-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .rule-list li { font-size: 12px; color: var(--muted); line-height: 1.6; display: flex; gap: 8px; align-items: flex-start; }
+  .rule-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+  .rule-card-title { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+  .rule-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .rule-list li { font-size: 14px; color: var(--muted); line-height: 1.6; display: flex; gap: 8px; align-items: flex-start; }
   .rule-list li::before { content: '—'; color: var(--accent); font-family: var(--mono); flex-shrink: 0; margin-top: 1px; }
 
-  .footer { margin-top: 48px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--muted); animation: fadeUp 0.5s 0.5s ease both; }
+  .footer { margin-top: 48px; text-align: center; font-family: var(--mono); font-size: 13px; color: var(--muted); animation: fadeUp 0.5s 0.5s ease both; }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
