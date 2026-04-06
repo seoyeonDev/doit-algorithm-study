@@ -1,0 +1,19 @@
+name: Weekly Facilitator Notification
+
+on:
+  schedule:
+    # 매주 수요일 09:00 KST (00:00 UTC) — 목요일 스터디 하루 전 안내
+    - cron: '0 0 * * 3'
+  workflow_dispatch: # 수동 실행 (테스트용)
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Send facilitator notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python .github/scripts/facilitator_notify.py
