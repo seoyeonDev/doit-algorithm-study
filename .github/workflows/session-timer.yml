@@ -15,9 +15,15 @@ jobs:
         run: |
           python3 - <<'EOF'
           import json, urllib.request, os
+          url = os.environ["WEBHOOK"].strip()
+          print(f"URL length: {len(url)}, starts with: {url[:30]}")
           payload = {"embeds": [{"title": "🟢 오프닝", "description": "출석 확인 · 이번 주 챕터 리마인드 · 진행자 소개", "color": 16117992, "fields": [{"name": "⏱ 구간", "value": "00 — 05 min", "inline": True}, {"name": "⏳ 남은 시간", "value": "5분", "inline": True}], "footer": {"text": "Do it! 알고리즘 파이썬 스터디"}}]}
-          req = urllib.request.Request(os.environ["WEBHOOK"], json.dumps(payload).encode(), {"Content-Type": "application/json"}, method="POST")
-          urllib.request.urlopen(req)
+          req = urllib.request.Request(url, json.dumps(payload).encode(), {"Content-Type": "application/json"}, method="POST")
+          try:
+            urllib.request.urlopen(req)
+          except urllib.error.HTTPError as e:
+            print(f"Discord 에러 응답: {e.read().decode()}")
+            raise
           print("✅ 오프닝 알림 전송")
           EOF
 
