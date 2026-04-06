@@ -5,9 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>문제 모음 — Do it! 알고리즘 스터디</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./web/variable/pretendardvariable.css">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
+  @font-face {
+    font-family: 'Pretendard Variable';
+    font-weight: 45 920;
+    font-style: normal;
+    font-display: swap;
+    src: url('./web/variable/woff2/PretendardVariable.woff2') format('woff2-variations');
+  }
+  html { font-family: 'Pretendard Variable', sans-serif; }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
     --bg: #0d0f14; --surface: #151820; --surface2: #1c2030;
@@ -25,7 +32,7 @@
   .glow-orb { position: fixed; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(123,255,192,0.06) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; z-index: 0; }
   .glow-orb2 { position: fixed; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(91,212,240,0.05) 0%, transparent 70%); bottom: -50px; left: -50px; pointer-events: none; z-index: 0; }
 
-  .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 48px 24px 100px; }
+  .container { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 32px 40px 60px; }
 
   .page-tag {
     display: inline-flex; align-items: center; gap: 8px;
@@ -33,12 +40,12 @@
     border: 1px solid rgba(240,180,91,0.25); padding: 6px 14px; border-radius: 100px;
     margin-bottom: 24px; animation: fadeUp 0.5s ease both;
   }
-  h1 { font-family: var(--mono); font-size: clamp(20px, 4vw, 28px); font-weight: 700; line-height: 1.25; margin-bottom: 8px; animation: fadeUp 0.5s 0.1s ease both; }
+  h1 { font-family: var(--mono); font-size: clamp(26px, 4vw, 34px); font-weight: 700; line-height: 1.25; margin-bottom: 8px; animation: fadeUp 0.5s 0.1s ease both; }
   .hl { color: var(--accent3); }
-  .subtitle { font-size: 13px; color: var(--muted); margin-bottom: 36px; animation: fadeUp 0.5s 0.15s ease both; }
+  .subtitle { font-size: 15px; color: var(--muted); margin-bottom: 36px; animation: fadeUp 0.5s 0.15s ease both; }
 
   .pr-cache-hint {
-    font-family: var(--mono); font-size: 11px; line-height: 1.55; color: var(--muted);
+    font-family: var(--mono); font-size: 13px; line-height: 1.55; color: var(--muted);
     padding: 12px 14px; margin: -20px 0 28px;
     border: 1px solid var(--border); border-radius: 8px; background: rgba(123,255,192,0.04);
     animation: fadeUp 0.5s 0.18s ease both;
@@ -57,16 +64,16 @@
   }
 
   .week-header {
-    display: grid; grid-template-columns: 56px 1fr auto;
+    display: grid; grid-template-columns: 70px 1fr auto;
     align-items: center; gap: 12px;
-    padding: 14px 18px; cursor: pointer;
+    padding: 18px 22px; cursor: pointer;
     transition: background 0.2s;
   }
   .week-header:hover { border-color: rgba(240,180,91,0.3); background: var(--surface2); }
 
-  .week-num { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .week-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-  .week-chapter { font-family: var(--mono); font-size: 10px; color: var(--accent3); }
+  .week-num { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+  .week-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .week-chapter { font-family: var(--mono); font-size: 12px; color: var(--accent3); }
 
   .week-right { display: flex; align-items: center; gap: 10px; }
 
@@ -79,14 +86,14 @@
   .file-list { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; }
   .file-item {
     display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px; border-radius: 8px;
+    padding: 14px 18px; border-radius: 8px;
     background: var(--bg); border: 1px solid var(--border);
     cursor: pointer; transition: border-color 0.2s, background 0.2s;
   }
   .file-item:hover { border-color: rgba(240,180,91,0.35); background: rgba(240,180,91,0.04); }
-  .file-icon { font-family: var(--mono); font-size: 10px; color: var(--accent3); flex-shrink: 0; }
-  .file-name { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
-  .file-ext  { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  .file-icon { font-family: var(--mono); font-size: 12px; color: var(--accent3); flex-shrink: 0; }
+  .file-name { font-size: 15px; font-weight: 500; color: var(--text); flex: 1; }
+  .file-ext  { font-family: var(--mono); font-size: 12px; color: var(--muted); }
 
   .file-sublist { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; margin-left: 28px; }
   .file-item.solved { border-color: rgba(123,255,192,0.12); }
