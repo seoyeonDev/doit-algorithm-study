@@ -1,0 +1,9 @@
+#!/bin/bash
+BRANCH=$(git symbolic-ref HEAD | sed 's|refs/heads/||')
+PATTERN="^((summary|solve)/week[0-9]{2}/[a-z]+|feature/[a-z][a-z0-9-]*)"
+
+if [[ ! $BRANCH =~ $PATTERN ]] && [[ $BRANCH != "main" ]]; then
+  echo "❌ 브랜치 이름 규칙 위반: $BRANCH"
+  echo "허용 형식: summary/week01/이름 또는 solve/week01/이름"
+  exit 1
+fi

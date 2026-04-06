@@ -5,6 +5,23 @@
 
 ---
 
+## ⚙️ 초기 세팅
+
+레포를 clone한 후 아래 명령어를 **한 번만** 실행해주세요.
+
+```bash
+bash setup.sh
+```
+혹은, 아래 git config 실행 
+
+```bash
+git config core.hooksPath .github/hooks
+```
+
+브랜치 이름 규칙을 위반하면 push가 자동으로 차단됩니다.
+
+---
+
 ## 📁 레포 구조
 
 ```
