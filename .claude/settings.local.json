@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r -l font /d/doit/doit-algorithm-study --include=*.ts --include=*.tsx --include=*.js --include=*.jsx --include=*.json)"
+    ]
+  }
+}
