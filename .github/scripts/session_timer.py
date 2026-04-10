@@ -27,40 +27,54 @@ SCHEDULE = [
         "title": "🟢 오프닝",
         "range": "00 — 05 min",
         "duration": "5분",
-        "description": "출석 확인 · 이번 주 챕터 리마인드 · 진행자 소개",
+        "description": "출석 확인 · 이번 주 챕터 · 진행자 소개",
         "color": 0xF5F0E8,
+        "warning": False,
     },
     {
         "offset_min": 5,
-        "title": "📚 요약 공유",
-        "range": "05 — 25 min",
-        "duration": "20분",
-        "description": "각자 핵심 내용 2~3가지 공유 (1인 약 5분)\n사전에 GitHub에 올린 요약 기반으로 · 질문은 토론 시간에",
-        "color": 0x7BFFC0,
-    },
-    {
-        "offset_min": 25,
-        "title": "💬 자유 토론",
-        "range": "25 — 40 min",
-        "duration": "15분",
-        "description": "어려웠던 개념 · 인사이트 공유 · 사전에 정해온 토론 주제\n진행자가 흐름 조율 · 결론보다 과정이 중요",
-        "color": 0xB3A8E8,
+        "title": "📚 요약 공유 + 자유 토론",
+        "range": "05 — 45 min",
+        "duration": "40분",
+        "description": "각자 핵심 내용 공유 → 자연스럽게 토론으로 이어가기\n인위적으로 끊지 않아도 돼요 · 흐름이 좋으면 그대로\n어려웠던 개념 · 새로 알게 된 것 · 토론 주제 자유롭게",
+        "color": 0xC8EDE3,
+        "warning": False,
     },
     {
         "offset_min": 40,
-        "title": "💻 코딩 문제 리뷰",
-        "range": "40 — 55 min",
-        "duration": "15분",
-        "description": "문제 출제자가 문제 소개 · 각자 풀이 PR 기반으로 코드 리뷰\n못 풀었도 접근 방식 공유 · 더 나은 풀이 토론",
-        "color": 0xFFDFA8,
+        "title": "⏰ 요약 공유 + 자유 토론 — 5분 전",
+        "range": "40 — 45 min",
+        "duration": "5분 남음",
+        "description": "요약 공유 + 자유 토론이 **5분 후 종료**됩니다.\n마무리 발언을 준비해 주세요.",
+        "color": 0xC8EDE3,
+        "warning": True,
     },
     {
-        "offset_min": 55,
+        "offset_min": 45,
+        "title": "💻 코딩 문제 리뷰",
+        "range": "45 — 57 min",
+        "duration": "12분",
+        "description": "문제 출제자 소개 → 풀이 PR 기반 코드 리뷰\n못 풀었어도 접근 방식 공유로 충분해요",
+        "color": 0xFFDFA8,
+        "warning": False,
+    },
+    {
+        "offset_min": 52,
+        "title": "⏰ 코딩 문제 리뷰 — 5분 전",
+        "range": "52 — 57 min",
+        "duration": "5분 남음",
+        "description": "코딩 문제 리뷰가 **5분 후 종료**됩니다.\n마무리 발언을 준비해 주세요.",
+        "color": 0xFFDFA8,
+        "warning": True,
+    },
+    {
+        "offset_min": 57,
         "title": "🏁 마무리",
-        "range": "55 — 60 min",
-        "duration": "5분",
-        "description": "다음 주 챕터 확인 · 진행자 · 문제 출제자 지정",
+        "range": "57 — 60 min",
+        "duration": "3분",
+        "description": "다음 주 챕터 · 진행자 · 문제 출제자 지정",
         "color": 0xF5F0E8,
+        "warning": False,
     },
     {
         "offset_min": 60,
@@ -69,6 +83,7 @@ SCHEDULE = [
         "duration": "",
         "description": "오늘도 수고하셨습니다! 🎉",
         "color": 0x7BFFC0,
+        "warning": False,
     },
 ]
 
@@ -164,7 +179,7 @@ def main() -> None:
     print()
     print("  세션 일정:")
     for s in SCHEDULE:
-        if s["range"]:
+        if s["range"] and not s.get("warning"):
             print(f"    {s['range']:18s} {s['title']}")
     print()
     print("  명령어: 'start' — 타이머 시작 | 'q' — 종료")
