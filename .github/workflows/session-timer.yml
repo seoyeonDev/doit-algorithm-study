@@ -15,54 +15,65 @@ jobs:
         run: |
           curl -s -X POST "$WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d '{"embeds":[{"title":"🟢 오프닝","description":"출석 확인 · 이번 주 챕터 리마인드 · 진행자 소개","color":16117992,"fields":[{"name":"⏱ 구간","value":"00 — 05 min","inline":true},{"name":"⏳ 남은 시간","value":"5분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
+            -d '{"embeds":[{"title":"🟢 오프닝","description":"출석 확인 · 이번 주 챕터 · 진행자 소개","color":16117992,"fields":[{"name":"⏱ 구간","value":"00 — 05 min","inline":true},{"name":"⏳ 남은 시간","value":"5분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
 
-      - name: "⏳ 5분 대기 → 요약 공유"
+      - name: "⏳ 5분 대기 → 요약 공유 + 자유 토론"
         run: sleep 300
 
-      - name: "📚 요약 공유 (T+5)"
+      - name: "📚 요약 공유 + 자유 토론 (T+5)"
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           curl -s -X POST "$WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d '{"embeds":[{"title":"📚 요약 공유","description":"각자 핵심 내용 2~3가지 공유 (1인 약 5분)\n사전에 GitHub에 올린 요약 기반으로 · 질문은 토론 시간에","color":8126400,"fields":[{"name":"⏱ 구간","value":"05 — 25 min","inline":true},{"name":"⏳ 남은 시간","value":"20분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
+            -d '{"embeds":[{"title":"📚 요약 공유 + 자유 토론","description":"각자 핵심 내용 공유 → 자연스럽게 토론으로 이어가기\n인위적으로 끊지 않아도 돼요 · 흐름이 좋으면 그대로\n어려웠던 개념 · 새로 알게 된 것 · 토론 주제 자유롭게","color":13168099,"fields":[{"name":"⏱ 구간","value":"05 — 45 min","inline":true},{"name":"⏳ 남은 시간","value":"40분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
 
-      - name: "⏳ 20분 대기 → 자유 토론"
-        run: sleep 1200
+      - name: "⏳ 35분 대기 → 5분 전 경고"
+        run: sleep 2100
 
-      - name: "💬 자유 토론 (T+25)"
+      - name: "⏰ 요약 공유 + 자유 토론 — 5분 전 (T+40)"
         env:
           WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           curl -s -X POST "$WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d '{"embeds":[{"title":"💬 자유 토론","description":"어려웠던 개념 · 인사이트 공유 · 사전에 정해온 토론 주제\n진행자가 흐름 조율 · 결론보다 과정이 중요","color":11774184,"fields":[{"name":"⏱ 구간","value":"25 — 40 min","inline":true},{"name":"⏳ 남은 시간","value":"15분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
+            -d '{"embeds":[{"title":"⏰ 요약 공유 + 자유 토론 — 5분 전","description":"요약 공유 + 자유 토론이 **5분 후 종료**됩니다.\n마무리 발언을 준비해 주세요.","color":13168099,"fields":[{"name":"⏱ 구간","value":"40 — 45 min","inline":true},{"name":"⏳ 남은 시간","value":"5분 남음","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
 
-      - name: "⏳ 15분 대기 → 코딩 문제 리뷰"
-        run: sleep 900
-
-      - name: "💻 코딩 문제 리뷰 (T+40)"
-        env:
-          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          curl -s -X POST "$WEBHOOK" \
-            -H "Content-Type: application/json" \
-            -d '{"embeds":[{"title":"💻 코딩 문제 리뷰","description":"문제 출제자가 문제 소개 · 각자 풀이 PR 기반으로 코드 리뷰\n못 풀었도 접근 방식 공유 · 더 나은 풀이 토론","color":16768936,"fields":[{"name":"⏱ 구간","value":"40 — 55 min","inline":true},{"name":"⏳ 남은 시간","value":"15분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
-
-      - name: "⏳ 15분 대기 → 마무리"
-        run: sleep 900
-
-      - name: "🏁 마무리 (T+55)"
-        env:
-          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          curl -s -X POST "$WEBHOOK" \
-            -H "Content-Type: application/json" \
-            -d '{"embeds":[{"title":"🏁 마무리","description":"다음 주 챕터 확인 · 진행자 · 문제 출제자 지정","color":16117992,"fields":[{"name":"⏱ 구간","value":"55 — 60 min","inline":true},{"name":"⏳ 남은 시간","value":"5분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
-
-      - name: "⏳ 5분 대기 → 종료"
+      - name: "⏳ 5분 대기 → 코딩 문제 리뷰"
         run: sleep 300
+
+      - name: "💻 코딩 문제 리뷰 (T+45)"
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"💻 코딩 문제 리뷰","description":"문제 출제자 소개 → 풀이 PR 기반 코드 리뷰\n못 풀었어도 접근 방식 공유로 충분해요","color":16768936,"fields":[{"name":"⏱ 구간","value":"45 — 57 min","inline":true},{"name":"⏳ 남은 시간","value":"12분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
+
+      - name: "⏳ 7분 대기 → 5분 전 경고"
+        run: sleep 420
+
+      - name: "⏰ 코딩 문제 리뷰 — 5분 전 (T+52)"
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"⏰ 코딩 문제 리뷰 — 5분 전","description":"코딩 문제 리뷰가 **5분 후 종료**됩니다.\n마무리 발언을 준비해 주세요.","color":16768936,"fields":[{"name":"⏱ 구간","value":"52 — 57 min","inline":true},{"name":"⏳ 남은 시간","value":"5분 남음","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
+
+      - name: "⏳ 5분 대기 → 마무리"
+        run: sleep 300
+
+      - name: "🏁 마무리 (T+57)"
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          curl -s -X POST "$WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d '{"embeds":[{"title":"🏁 마무리","description":"다음 주 챕터 · 진행자 · 문제 출제자 지정","color":16117992,"fields":[{"name":"⏱ 구간","value":"57 — 60 min","inline":true},{"name":"⏳ 남은 시간","value":"3분","inline":true}],"footer":{"text":"Do it! 알고리즘 파이썬 스터디"}}]}'
+
+      - name: "⏳ 3분 대기 → 종료"
+        run: sleep 180
 
       - name: "✅ 스터디 종료 (T+60)"
         env:
