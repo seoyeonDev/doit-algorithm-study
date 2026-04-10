@@ -15,5 +15,5 @@ jobs:
 
       - name: Send facilitator notification
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL_NOTIFY: ${{ secrets.DISCORD_WEBHOOK_URL_NOTIFY }}
         run: python .github/scripts/facilitator_notify.py
