@@ -145,7 +145,7 @@ def main():
         ]
     }
 
-    webhook_url = os.environ.get("DISCORD_WEBHOOK_URL")
+    webhook_url = os.environ.get("DISCORD_WEBHOOK_URL_NOTIFY")
     if not webhook_url:
         # 로컬 테스트 시 내용만 출력
         print(json.dumps(payload, ensure_ascii=False, indent=2))
