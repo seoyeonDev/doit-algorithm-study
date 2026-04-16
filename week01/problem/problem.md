@@ -3,7 +3,12 @@
 ## 출제자
 - 이서연
 
-## 문제
-- 플랫폼: 백준
-- 링크: [1181](https://www.acmicpc.net/problem/1181)
-- 난이도: 실버 5
+## 문자열 반복해서 풀기
+- 플랫폼: 프로그래머스
+- 링크: [181950](https://school.programmers.co.kr/learn/courses/30/lessons/181950?language=python3)
+- 난이도: Lv.0
+
+## 문자 반복 출력하기
+- 플랫폼: 프로그래머스
+- 링크: [120825](https://school.programmers.co.kr/learn/courses/30/lessons/120825)
+- 난이도: Lv.0
