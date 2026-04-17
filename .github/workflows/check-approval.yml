@@ -1,0 +1,33 @@
+name: Check PR Approval
+on:
+  pull_request:
+    branches: [ main ]
+  pull_request_review:
+    types: [submitted, dismissed]
+
+jobs:
+  verify-approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify solve/* branch requires approval
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [[ "$HEAD_BRANCH" == solve/* ]]; then
+            # API를 통해 해당 PR의 'APPROVED' 상태인 리뷰 개수를 확인
+            APPROVALS=$(gh api repos/$REPO/pulls/$PR_NUMBER/reviews -q '[.[] | select(.state=="APPROVED")] | length')
+            
+            if [ "$APPROVALS" -ge 1 ]; then
+              echo "승인(Approve) 확인 완료. 병합 가능."
+              exit 0
+            else
+              echo "::error::solve/* 브랜치는 병합 전 최소 1명의 승인(Approve)이 필수입니다."
+              exit 1
+            fi
+          else
+            echo "해당 브랜치($HEAD_BRANCH)는 리뷰 강제 대상이 아닙니다."
+            exit 0
+          fi
