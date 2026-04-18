@@ -1,33 +1,86 @@
-name: Check PR Approval
+name: Run Solved Files
+
 on:
   pull_request:
-    branches: [ main ]
-  pull_request_review:
-    types: [submitted, dismissed]
+    paths:
+      - '**/solved/*.py'
 
 jobs:
-  verify-approval:
+  run-solutions:
     runs-on: ubuntu-latest
+    env:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      PYTHONUTF8: "1"
+      PYTHONIOENCODING: utf-8
+    permissions:
+      pull-requests: write
+      contents: read
+
     steps:
-      - name: Verify solve/* branch requires approval
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run solutions
         run: |
-          if [[ "$HEAD_BRANCH" == solve/* ]]; then
-            # API를 통해 해당 PR의 'APPROVED' 상태인 리뷰 개수를 확인
-            APPROVALS=$(gh api repos/$REPO/pulls/$PR_NUMBER/reviews -q '[.[] | select(.state=="APPROVED")] | length')
-            
-            if [ "$APPROVALS" -ge 1 ]; then
-              echo "승인(Approve) 확인 완료. 병합 가능."
-              exit 0
-            else
-              echo "::error::solve/* 브랜치는 병합 전 최소 1명의 승인(Approve)이 필수입니다."
-              exit 1
-            fi
-          else
-            echo "해당 브랜치($HEAD_BRANCH)는 리뷰 강제 대상이 아닙니다."
-            exit 0
-          fi
+          git config core.quotePath false
+          # PR 스냅샷 SHA로 비교 (origin/base...HEAD는 merge ref·fetch 상태에 따라 빈 diff가 될 수 있음)
+          git diff --name-only \
+            ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }} \
+            | grep -E '(^|/)solved/.*\.py$' > changed_files.txt || true
+
+          python3 - << 'EOF'
+          import subprocess, pathlib
+
+          files = pathlib.Path('changed_files.txt').read_text(encoding='utf-8').strip().splitlines()
+          files = [f for f in files if f]
+
+          lines = ['## 🤖 풀이 실행 결과\n']
+
+          if not files:
+              lines.append('변경된 `solved/*.py` 파일이 없습니다.')
+          else:
+              for f in files:
+                  lines.append(f'### `{f}`')
+                  try:
+                      r = subprocess.run(
+                          ['python3', f],
+                          capture_output=True,
+                          text=True,
+                          encoding='utf-8',
+                          errors='replace',
+                          timeout=10,
+                      )
+                      status = '✅ 성공' if r.returncode == 0 else '❌ 오류'
+                      lines.append(status)
+                      out = (r.stdout + r.stderr).strip()
+                      if out:
+                          lines.append(f'```\n{out[:3000]}\n```')
+                  except subprocess.TimeoutExpired:
+                      lines.append('⏱️ 시간 초과 (10s 초과)')
+                  lines.append('')
+
+          pathlib.Path('result.md').write_text('\n'.join(lines), encoding='utf-8')
+          EOF
+
+      - name: Find existing comment
+        id: find-comment
+        uses: peter-evans/find-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: github-actions[bot]
+          body-includes: '🤖 풀이 실행 결과'
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: result.md
+          edit-mode: replace
