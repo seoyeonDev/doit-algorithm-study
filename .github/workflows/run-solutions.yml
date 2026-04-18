@@ -30,7 +30,9 @@ jobs:
       - name: Run solutions
         run: |
           git config core.quotePath false
-          git diff --name-only origin/${{ github.base_ref }}...HEAD \
+          # PR 스냅샷 SHA로 비교 (origin/base...HEAD는 merge ref·fetch 상태에 따라 빈 diff가 될 수 있음)
+          git diff --name-only \
+            ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }} \
             | grep -E '(^|/)solved/.*\.py$' > changed_files.txt || true
 
           python3 - << 'EOF'
