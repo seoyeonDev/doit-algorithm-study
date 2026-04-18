@@ -24,6 +24,7 @@ jobs:
 
       - name: Run solutions
         run: |
+          git config core.quotePath false # 한글 파일명 인식 처리 추가 
           git diff --name-only origin/${{ github.base_ref }}...HEAD \
             | grep 'solved/.*\.py$' > changed_files.txt || true
 
