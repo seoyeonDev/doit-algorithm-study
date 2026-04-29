@@ -5,7 +5,7 @@ def solution(n):
     # 범위 값을 boolean 배열 안에 담기
     # i부터 숫자 n 까지 반복
         # num = 2 부터 num * num <= n 까지 반복
-            # false 인 수들만 다시 확인 
+            # 소수인 수들만 다시 확인 
                 # num 의 배수 체크 
                     # 배수 삭제
                     
