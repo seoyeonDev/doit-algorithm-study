@@ -11,9 +11,9 @@ def solution(n):
                     
     my_list = [True] * (n+1) # 리스트 곱셈 연산
     
-    for i in range(2,n+1,1):
+    for i in range(2, n + 1,1):
         if my_list[i] == True:
-            for j in range(i * i,n + 1, i):
+            for j in range(i * i, n + 1, i):
                 my_list[j] = False
             
     for i in range(2, len(my_list), 1):
