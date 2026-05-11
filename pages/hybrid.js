@@ -8,9 +8,15 @@ const GH_URL = `https://github.com/${REPO}`;
 
 // Members (fixed, based on repo)
 const MEMBERS = [
-  { name: '김혜원', color: '#4a8a5c' },
-  { name: '이서연', color: '#c96442' },
+  { name: '김혜원', color: '#4a8a5c', aliases: ['haeburney', 'hyewon'] },
+  { name: '이서연', color: '#c96442', aliases: ['seoyeondev', 'sylee'] },
 ];
+
+function memberByGitHub(ghName) {
+  const lower = ghName.toLowerCase();
+  return MEMBERS.find(m => m.aliases.some(a => lower.includes(a)))
+    || { name: ghName, color: '#a39681' };
+}
 const _mCache = {};
 function memberOf(filename) {
   const base = filename.replace(/\.[^.]+$/, '');
@@ -54,7 +60,8 @@ async function getWeeks() {
   return _weeks;
 }
 
-let _fileCache = {};
+let _fileCache    = {};
+let _activityCache = null;
 async function getFiles(num, folder) {
   const key = `${num}:${folder}`;
   if (_fileCache[key]) return _fileCache[key];
@@ -145,15 +152,17 @@ function folderLabel(ww, folder) {
 
 // ── recent activity (GitHub commits) ──
 async function fetchActivity() {
+  if (_activityCache) return _activityCache;
   try {
-    const res = await fetch(ghApi(`repos/${REPO}/commits?ref=${BRANCH}&per_page=40`));
+    const res = await fetch(ghApi(`repos/${REPO}/commits?ref=${BRANCH}&per_page=60`));
     if (!res.ok) return [];
     const list = await res.json();
     if (!Array.isArray(list)) return [];
 
+    const seen  = new Set();
     const items = [];
     for (const c of list) {
-      if (items.length >= 5) break;
+      if (items.length >= 7) break;
       const msg  = c.commit.message.split('\n')[0];
       const date = new Date(c.commit.author.date);
 
@@ -164,15 +173,19 @@ async function fetchActivity() {
         const ww     = prBranch[2];
         const num    = parseInt(ww);
         const mStr   = prBranch[3];
-        const m      = MEMBERS.find(x => mStr.includes(x.name)) || { name: mStr, color: '#a39681' };
-        items.push({
-          date,
-          route: `folder:${num}:${folder}`,
-          label: folderLabel(ww, folder),
-          path:  `week${ww}/${folder}/`,
-          icon:  ['summary','problem'].includes(folder) ? 'md' : 'py',
-          member: m,
-        });
+        const m      = MEMBERS.find(x => mStr.includes(x.name)) || memberByGitHub(mStr);
+        const key    = `${ww}:${folder}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          items.push({
+            date,
+            route: `folder:${num}:${folder}`,
+            label: folderLabel(ww, folder),
+            path:  `week${ww}/${folder}/`,
+            icon:  ['summary','problem'].includes(folder) ? 'md' : 'py',
+            member: m,
+          });
+        }
         continue;
       }
 
@@ -184,14 +197,18 @@ async function fetchActivity() {
         const file   = pathInMsg[3];
         const num    = parseInt(ww);
         const m      = memberOf(file);
-        items.push({
-          date,
-          route: `file:${num}:${folder}:${file}`,
-          label: `W${ww} ${FOLDER_ACTION[folder] || folder} — ${file.replace(/\.[^.]+$/, '')}`,
-          path:  `week${ww}/${folder}/${file}`,
-          icon:  file.endsWith('.py') ? 'py' : 'md',
-          member: m,
-        });
+        const key    = `${ww}:${folder}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          items.push({
+            date,
+            route: `file:${num}:${folder}:${file}`,
+            label: `W${ww} ${FOLDER_ACTION[folder] || folder} — ${file.replace(/\.[^.]+$/, '')}`,
+            path:  `week${ww}/${folder}/${file}`,
+            icon:  file.endsWith('.py') ? 'py' : 'md',
+            member: m,
+          });
+        }
         continue;
       }
 
@@ -204,7 +221,7 @@ async function fetchActivity() {
           const num  = parseInt(wMatch[1]);
           const ww   = String(num).padStart(2,'0');
           const ghName = c.commit.author.name;
-          const m    = MEMBERS.find(x => ghName.includes(x.name)) || { name: ghName, color: '#a39681' };
+          const m    = MEMBERS.find(x => ghName.includes(x.name)) || memberByGitHub(ghName);
           items.push({
             date,
             route: `week:${num}`,
@@ -216,6 +233,7 @@ async function fetchActivity() {
         }
       }
     }
+    _activityCache = items;
     return items;
   } catch { return []; }
 }
@@ -544,7 +562,7 @@ async function renderFolder(num, folderName, computed) {
             const ext = f.name.split('.').pop();
             const nameNoExt = f.name.slice(0, -(ext.length+1));
             const isMd = ext === 'md';
-            const clickRoute = isMd ? `file:${num}:${folderName}:${f.name}` : null;
+            const clickRoute = `file:${num}:${folderName}:${f.name}`;
             const m = memberOf(f.name);
             return `<div class="feed-row" ${clickRoute ? `data-go="${clickRoute}"` : ``}>
               <div class="when" style="font-family:var(--mono);text-transform:uppercase">.${ext}</div>

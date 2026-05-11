@@ -4,6 +4,51 @@
   font-weight: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
+  font-weight: 100; font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff2');
+  font-weight: 200; font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');
+  font-weight: 300; font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');
+  font-weight: 400; font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');
+  font-weight: 500; font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');
+  font-weight: 600; font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2');
+  font-weight: 700; font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');
+  font-weight: 800; font-display: swap;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff2');
+  font-weight: 900; font-display: swap;
+}
 :root {
   --bg:       #f7f5f0;
   --panel:    #ffffff;
@@ -258,14 +303,16 @@ h2.sec::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 .reader {
   background: var(--panel); border: 1px solid var(--border); border-radius: 0 0 10px 10px;
   padding: 36px 56px 48px;
-  font-family: var(--serif); font-size: 17px; line-height: 1.85; color: var(--ink);
+  font-family: 'Pretendard', var(--sans); font-size: 16px; font-weight: 400; line-height: 1.85; color: var(--ink);
 }
-.reader h1 { font-family: var(--display); font-size: 34px; font-weight: 700; line-height: 1.25; letter-spacing: -.015em; margin: 0 0 10px; }
-.reader h2 { font-family: var(--display); font-size: 24px; font-weight: 700; margin: 40px 0 10px; letter-spacing: -.005em; padding-top: 10px; border-top: 1px solid var(--border); }
-.reader h3 { font-family: var(--sans); font-size: 16px; font-weight: 600; margin: 28px 0 8px; color: var(--ink-2); }
+.reader h1 { font-family: var(--display); font-size: 34px; font-weight: 900; line-height: 1.25; letter-spacing: -.015em; margin: 0 0 10px; }
+.reader h2 { font-family: var(--display); font-size: 26px; font-weight: 800; margin: 40px 0 10px; letter-spacing: -.005em; padding-top: 10px; border-top: 1px solid var(--border); }
+.reader h3 { font-family: var(--display); font-size: 20px; font-weight: 700; margin: 28px 0 8px; color: var(--ink-2); }
+.reader h4 { font-family: 'Pretendard', var(--sans); font-size: 16px; font-weight: 600; margin: 20px 0 6px; color: var(--ink-2); }
+.reader h5, .reader h6 { font-family: 'Pretendard', var(--sans); font-size: 14px; font-weight: 500; margin: 16px 0 4px; color: var(--ink-3); }
 .reader p { margin: 0 0 16px; }
 .reader p > strong, .reader li > strong { background: var(--hl); padding: 0 3px; border-radius: 3px; font-weight: 700; }
-.reader blockquote { margin: 20px 0; padding: 12px 20px; border-left: 3px solid var(--accent); background: var(--panel-2); color: var(--ink-2); border-radius: 0 8px 8px 0; font-family: var(--sans); font-size: 15px; line-height: 1.65; }
+.reader blockquote { margin: 20px 0; padding: 12px 20px; border-left: 3px solid var(--accent); background: var(--panel-2); color: var(--ink-2); border-radius: 0 8px 8px 0; font-family: 'Pretendard', var(--sans); font-size: 15px; line-height: 1.65; }
 .reader blockquote p { margin: 0 0 8px; }
 .reader blockquote p:last-child { margin: 0; }
 .reader ul, .reader ol { padding-left: 22px; margin: 0 0 16px; }
@@ -274,7 +321,7 @@ h2.sec::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 .reader pre { background: #1f1a14; color: #f0ebe0; border-radius: 8px; padding: 18px 22px; font-family: var(--mono); font-size: 13.5px; line-height: 1.65; overflow-x: auto; margin: 18px 0; }
 .reader pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
 .reader hr { border: 0; border-top: 1px solid var(--border); margin: 28px 0; }
-.reader table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 14px; font-family: var(--sans); }
+.reader table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 14px; font-family: 'Pretendard', var(--sans); }
 .reader th { background: var(--panel-2); padding: 8px 12px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
 .reader td { padding: 8px 12px; border: 1px solid var(--border); }
 .reader img { max-width: 100%; border-radius: 6px; }
