@@ -675,6 +675,20 @@ async function renderFile(num, folderName, fileName, computed) {
 }
 
 // ── search ──
+let _treeCache = null;
+async function fetchTree() {
+  if (_treeCache) return _treeCache;
+  try {
+    const res = await fetch(ghApi(`repos/${REPO}/git/trees/${BRANCH}?recursive=1`));
+    if (!res.ok) return [];
+    const data = await res.json();
+    _treeCache = (data.tree || []).filter(f =>
+      f.type === 'blob' && /^week\d{2}\/(summary|solved|practice|problem)\/.+/.test(f.path)
+    );
+  } catch { _treeCache = []; }
+  return _treeCache;
+}
+
 let _searchInit = false;
 function initSearch(computed) {
   if (_searchInit) return;
@@ -690,6 +704,7 @@ function initSearch(computed) {
     if (!q) return [];
     const lq = q.toLowerCase();
     const results = [];
+    const seen = new Set();
 
     for (const w of computed) {
       const n = weekNum(w);
@@ -698,21 +713,25 @@ function initSearch(computed) {
       }
     }
 
-    for (const [key, files] of Object.entries(_fileCache)) {
-      const [num, folder] = key.split(':');
-      for (const f of files) {
-        if (f.name.toLowerCase().includes(lq)) {
-          results.push({
-            label: f.name.replace(/\.[^.]+$/, ''),
-            sub: `week${String(num).padStart(2,'0')}/${folder}/`,
-            route: `file:${num}:${folder}:${f.name}`,
-            icon: f.name.endsWith('.py') ? 'py' : 'md',
-          });
-        }
-      }
+    const treeItems = _treeCache || [];
+    for (const item of treeItems) {
+      const m = item.path.match(/^week(\d{2})\/(summary|solved|practice|problem)\/(.+)$/);
+      if (!m) continue;
+      const [, ww, folder, fname] = m;
+      if (fname === '.gitkeep') continue;
+      if (!fname.toLowerCase().includes(lq)) continue;
+      const route = `file:${parseInt(ww)}:${folder}:${fname}`;
+      if (seen.has(route)) continue;
+      seen.add(route);
+      results.push({
+        label: fname.replace(/\.[^.]+$/, ''),
+        sub: `week${ww}/${folder}/`,
+        route,
+        icon: fname.endsWith('.py') ? 'py' : 'md',
+      });
     }
 
-    return results.slice(0, 8);
+    return results.slice(0, 10);
   }
 
   function renderDrop(results) {
@@ -746,8 +765,12 @@ function initSearch(computed) {
     items[focusIdx]?.classList.add('focused');
   }
 
+  let treeFetched = false;
   input.addEventListener('input', () => renderDrop(buildResults(input.value.trim())));
-  input.addEventListener('focus', () => { if (input.value.trim()) renderDrop(buildResults(input.value.trim())); });
+  input.addEventListener('focus', () => {
+    if (!treeFetched) { treeFetched = true; fetchTree().then(() => { if (input.value.trim()) renderDrop(buildResults(input.value.trim())); }); }
+    else if (input.value.trim()) renderDrop(buildResults(input.value.trim()));
+  });
   input.addEventListener('blur', () => hideDrop());
   input.addEventListener('keydown', e => {
     if (e.key === 'Escape') { hideDrop(); input.value = ''; input.blur(); }
