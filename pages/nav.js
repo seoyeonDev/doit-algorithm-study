@@ -2,13 +2,20 @@
   const path = window.location.pathname;
 
   const links = [
-    { href: '/pages/index.html',     label: '홈',       match: ['/pages/', '/pages/index.html'] },
+    { href: '/pages/index.html',     label: '홈',        match: ['/pages/', '/pages/index.html'] },
+    { href: '/pages/hybrid.html',    label: '브라우저',  match: ['/pages/hybrid.html'] },
     { href: '/pages/problems.html',  label: '문제 모음', match: ['/pages/problems.html'] },
     { href: '/pages/summaries.html', label: '요약 모음', match: ['/pages/summaries.html'] },
   ];
 
   const style = document.createElement('style');
   style.textContent = `
+    @font-face {
+      font-family: 'JoseonGulim';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff') format('woff');
+      font-weight: normal;
+      font-display: swap;
+    }
     :root {
       --nav-h: 52px;
     }
@@ -26,7 +33,7 @@
       display: flex; align-items: center; gap: 32px;
     }
     .nav-logo {
-      font-family: 'Space Mono', monospace;
+      font-family: 'JoseonGulim', 'Space Mono', monospace;
       font-size: 13px; font-weight: 700;
       color: #7bffc0; text-decoration: none;
       display: flex; align-items: center; gap: 8px;
