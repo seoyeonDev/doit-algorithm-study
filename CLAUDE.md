@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 프로젝트 개요
 
 "Do it! 자료구조와 함께 배우는 알고리즘 입문 — 파이썬 편" 교재 기반 알고리즘 스터디 레포.
-4명이 매주 목요일 20:00 KST에 모이며, W00(오리엔테이션) ~ W17(최종 회고)까지 총 17주 진행.
+4명이 매주 수요일 20:00 KST에 모이며, W00(오리엔테이션) ~ W17(최종 회고)까지 총 17주 진행.
 
 ## 초기 세팅
 
@@ -57,7 +57,7 @@ api/            # Vercel Serverless Function (GitHub API 프록시)
 | 워크플로우 | 트리거 | 역할 |
 |-----------|--------|------|
 | `run-solutions.yml` | PR (`solved/*.py` 변경 시) | 풀이 실행 후 결과를 PR 코멘트로 게시 |
-| `facilitator-notify.yml` | 매주 수요일 00:00 UTC (cron) / 수동 | 이번 주 진행자를 Discord에 알림 |
+| `facilitator-notify.yml` | 매주 화요일 00:00 UTC (cron) / 수동 | 이번 주 진행자를 Discord에 알림 |
 | `session-timer.yml` | 수동 (`workflow_dispatch`) | 스터디 세션 중 단계별 Discord 알림 전송 |
 
 ## Automation 스크립트

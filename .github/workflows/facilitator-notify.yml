@@ -2,8 +2,8 @@ name: Weekly Facilitator Notification
 
 on:
   schedule:
-    # 매주 수요일 09:00 KST (00:00 UTC) — 목요일 스터디 하루 전 안내
-    - cron: '0 0 * * 3'
+    # 매주 화요일 09:00 KST (00:00 UTC) — 수요일 스터디 하루 전 안내
+    - cron: '0 0 * * 2'
   workflow_dispatch: # 수동 실행 (테스트용)
 
 jobs:

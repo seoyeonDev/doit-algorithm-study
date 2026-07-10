@@ -1,5 +1,5 @@
 """
-매주 수요일 실행 — 이번 주 진행자를 계산해 Discord에 알림을 보냅니다.
+매주 화요일 실행 — 이번 주 진행자를 계산해 Discord에 알림을 보냅니다.
 weeks.json의 W01~W17 순서대로 멤버를 순환(round-robin) 배정합니다.
 """
 
@@ -24,18 +24,18 @@ def find_current_week(weeks, year):
     """오늘 날짜 기준으로 현재 진행 중인 주차 인덱스를 반환합니다."""
     today = datetime.date.today()
 
-    thursdays = []
+    wednesdays = []
     for w in weeks:
         mm, dd = w["date"].split("/")
-        thursdays.append(datetime.date(year, int(mm), int(dd)))
+        wednesdays.append(datetime.date(year, int(mm), int(dd)))
 
-    for i, thursday in enumerate(thursdays):
+    for i, wednesday in enumerate(wednesdays):
         week_start = (
-            thursdays[i - 1] + datetime.timedelta(days=1)
+            wednesdays[i - 1] + datetime.timedelta(days=1)
             if i > 0
             else datetime.date.min
         )
-        if week_start <= today <= thursday:
+        if week_start <= today <= wednesday:
             return i
 
     return -1
@@ -121,7 +121,7 @@ def main():
     next_facilitator = resolve_facilitator(current_idx + 1) if next_week else None
 
     mm, dd = current_week["date"].split("/")
-    date_str = f"{year}년 {int(mm)}월 {int(dd)}일 (목) 20:00"
+    date_str = f"{year}년 {int(mm)}월 {int(dd)}일 (수) 20:00"
 
     fields = [
         {"name": "📅 날짜", "value": date_str, "inline": True},
